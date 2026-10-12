@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff9f0">
+<meta name="description" content="讓柴犬陪你讀書：任務清單、科目分類、專注計時、讀書統計與成就。">
+<title>讀書柴犬｜任務清單與專注計時器</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ef9146'/%3E%3Cpath d='M12 29 15 9 28 20M36 20 49 9 52 29' fill='%23fff2dc'/%3E%3Cellipse cx='32' cy='36' rx='22' ry='20' fill='%23fff2dc'/%3E%3Ccircle cx='24' cy='32' r='3' fill='%23554132'/%3E%3Ccircle cx='40' cy='32' r='3' fill='%23554132'/%3E%3Cpath d='m27 40 5 5 5-5' fill='%23554132'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:light;--paper:#fff9f0;--card:#fffefa;--ink:#4c3829;--muted:#897465;--orange:#e67935;--orange-dark:#ad4e19;--soft:#fff0de;--line:#eadfce;--brown:#b89778;--green:#637b59;--shadow:0 6px 22px #62401f06;--radius:22px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif}
+button,input,select{font:inherit}
+button{cursor:pointer;touch-action:manipulation}
+button,input,select,summary,a{-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:default;opacity:.48}
+button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,a:focus-visible{outline:3px solid #b65d26;outline-offset:3px}
+button{min-height:44px}
+input,select{min-height:46px;border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;padding:10px 12px;max-width:100%;min-width:0}
+input::placeholder{color:#a4907e}
+input:disabled,select:disabled{background:#f3eee6;color:#958270}
+input[aria-invalid=true]{border-color:#b9533e}
+svg{display:block;max-width:100%}
+h1,h2,h3,p{margin:0}
+h1{font-size:29px;line-height:1.25;letter-spacing:.03em}
+h2{font-size:19px;line-height:1.4}
+h3{font-size:15px}
+small{font-size:13px}
+[hidden]{display:none!important}
+.app{max-width:1176px;margin:auto;padding:32px 28px 30px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}
+.brand{display:flex;gap:13px;align-items:center;min-width:0}
+.brandmark{width:52px;height:52px;border-radius:17px;background:var(--orange);display:grid;place-items:center;color:white;flex:none;box-shadow:0 5px 0 #d06b2d}
+.brandmark svg{width:28px;height:28px}
+.subtitle{font-size:13px;color:var(--muted);margin-top:5px;letter-spacing:.035em}
+.date{display:flex;align-items:center;gap:8px;padding:9px 15px;border:1px solid var(--line);border-radius:99px;background:#fffdf8;font-size:13px;color:var(--muted);flex:none}
+.icon{width:20px;height:20px;display:inline-block;flex:none;vertical-align:middle}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);min-width:0}
+.overview{padding:20px 24px;margin-bottom:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px 28px;align-items:center}
+.overviewhead{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
+.overviewhead .tag{background:#f4eddf;border-radius:7px;font-size:11px;padding:2px 7px}
+.overviewnumbers{display:flex;gap:14px;align-items:baseline;margin-top:5px}
+.overviewnumbers strong{font-size:27px;letter-spacing:.02em;line-height:1.3}
+.overviewnumbers span{font-size:14px;color:var(--muted)}
+.progress{height:9px;background:#f2e8db;border-radius:99px;overflow:hidden}
+.progress>span{display:block;height:100%;width:0;background:var(--orange);border-radius:99px;transition:width .3s}
+.overview .progress{grid-column:1;margin-top:1px}
+.snackbox{grid-column:2;grid-row:1/3;display:flex;align-items:center;gap:12px;background:var(--soft);padding:13px 20px;border-radius:15px;min-width:170px}
+.snack-icon{width:35px;height:35px}
+.snacknumber{font-size:25px;font-weight:750;line-height:1.2}
+.snackbox small{display:block;color:var(--muted);margin-top:3px}
+.workspace{display:grid;grid-template-columns:350px minmax(0,1fr);gap:22px;align-items:start}
+.studycolumn{display:grid;gap:20px;min-width:0}
+.sectionhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.sectiontitle{display:flex;align-items:center;gap:9px;min-width:0}
+.sectiontitle .icon{color:var(--orange)}
+.eyebrow{color:var(--muted);font-size:12px;letter-spacing:.08em}
+.pill{font-size:12px;background:#f5eee3;color:var(--muted);border-radius:99px;padding:4px 10px;white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:1px solid transparent;border-radius:11px;padding:10px 16px;font-size:14px;font-weight:650;line-height:1.5;max-width:100%}
+.primary{background:var(--orange);color:#fff}
+.primary:hover:not(:disabled){background:#d66c2b}
+.secondary{border-color:var(--line);background:#fffdf8;color:var(--ink)}
+.secondary:hover:not(:disabled){background:#f7efe5}
+.quiet{background:transparent;color:var(--muted);border-color:transparent}
+.quiet:hover:not(:disabled){background:#f5eee4;color:var(--ink)}
+.smallbtn{padding:6px 10px;font-size:13px}
+.danger{color:#a23e2f;background:#fff3ee;border-color:#f0d6ca}
+.dogcard{overflow:hidden;background:#fff5e6;position:relative}
+.dogtop{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:19px 20px 0}
+.dogname{font-weight:700;font-size:17px;overflow-wrap:anywhere;min-width:0}
+.namebtn{flex:none;color:#9a7150}
+.dogscene{height:210px;position:relative;display:flex;align-items:center;justify-content:center}
+.dogscene:before{content:"";position:absolute;width:240px;height:165px;border-radius:50%;background:#f9e6c9;top:23px}
+.dogbutton{position:relative;background:none;border:none;padding:0;width:262px;height:210px;border-radius:30px;color:inherit}
+.dogbutton svg{width:100%;height:100%;overflow:visible}
+.dogbutton:hover .dog-head{filter:brightness(1.02)}
+.dogbook,.dogglasses,.doghappy,.dog-rest,.stars{display:none}
+.dogcard[data-state=focus] .dogbook,.dogcard[data-state=focus] .dogglasses{display:block}
+.dogcard[data-state=happy] .doghappy,.dogcard[data-state=celebrate] .doghappy{display:block}
+.dogcard[data-state=pause] .dog-standing,.dogcard[data-state=rest] .dog-standing,.dogcard[data-state=ended] .dog-standing{display:none}
+.dogcard[data-state=pause] .dog-rest,.dogcard[data-state=rest] .dog-rest,.dogcard[data-state=ended] .dog-rest{display:block}
+.dogcard[data-state=celebrate] .stars{display:block}
+.dogtail{transform-origin:216px 174px;animation:tail 2.8s ease-in-out infinite}
+.dogcard[data-state=focus] .dog-standing{animation:breathe 4s ease-in-out infinite;transform-origin:50% 100%}
+.dogcard[data-state=happy] .dog-standing{animation:jump .65s ease-in-out 2}
+.dogcard[data-state=celebrate] .dog-standing{animation:jump .8s ease-in-out 2}
+.dogcard[data-state=stretch] .dog-standing{animation:stretch 1.8s ease-in-out;transform-origin:50% 100%}
+.stars{animation:sparkle .8s ease-in-out infinite}
+@keyframes tail{0%,70%,100%{transform:rotate(0)}80%{transform:rotate(-12deg)}90%{transform:rotate(8deg)}}
+@keyframes breathe{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+@keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-13px)}}
+@keyframes stretch{0%,100%{transform:scale(1)}45%{transform:scale(1.07,.92)}70%{transform:scale(.98,1.03)}}
+@keyframes sparkle{0%,100%{opacity:.5}50%{opacity:1}}
+.speech{position:relative;margin:0 20px 14px;background:#fffdf8;border:1px solid #eddcc5;border-radius:14px;padding:12px 13px;text-align:center;min-height:51px;font-size:14px;overflow-wrap:anywhere}
+.speech:before{content:"";position:absolute;width:10px;height:10px;background:#fffdf8;border-left:1px solid #eddcc5;border-top:1px solid #eddcc5;transform:rotate(45deg);top:-6px;left:calc(50% - 5px)}
+.doghint{text-align:center;font-size:11px;color:#a08061;margin:0 15px 16px}
+.timercard{padding:21px}
+.timer-mode{font-size:11px;background:var(--soft);color:var(--orange-dark);border-radius:6px;padding:3px 8px}
+.focus-fields{display:grid;grid-template-columns:minmax(0,1fr) 100px;gap:11px}
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label,.field-label{font-size:12px;color:var(--muted);font-weight:600}
+.minutes-wrap{position:relative}
+.minutes-wrap input{width:100%;padding-right:34px}
+.minutes-wrap span{position:absolute;right:11px;top:12px;color:var(--muted);font-size:12px;pointer-events:none}
+.timerface{text-align:center;padding:20px 0 18px}
+.clock{font-size:64px;line-height:1.15;font-weight:730;letter-spacing:-.035em;font-variant-numeric:tabular-nums}
+.timerstate{color:var(--muted);font-size:12px;min-height:20px;margin-top:8px}
+.timertrack{margin-top:16px;height:5px}
+.timertrack>span{background:#bd9870;transition:none}
+.timercontrols{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:8px}
+.timercontrols .btn{padding:10px 4px}
+.timer-message{font-size:13px;background:var(--soft);border-radius:10px;padding:10px 12px;margin-top:13px;overflow-wrap:anywhere}
+.break-actions{margin-top:10px}
+.break-actions .btn{width:100%}
+.time-summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;border-top:1px dashed var(--line);padding-top:18px;margin-top:20px}
+.time-summary small{color:var(--muted);display:block;font-size:11px}
+.time-summary strong{font-size:16px;display:block;font-variant-numeric:tabular-nums;margin-top:3px;overflow-wrap:anywhere}
+.rest-note{font-size:13px;color:var(--muted);padding:10px 12px;background:#f8f0e5;border-radius:10px}
+.error{color:#a54432;font-size:12px;min-height:0;margin-top:7px;overflow-wrap:anywhere}
+.taskcard{padding:24px;min-height:500px}
+.taskhead-note{font-size:12px;color:var(--muted)}
+.taskform{display:grid;gap:11px;background:#fbf5eb;border-radius:15px;padding:15px}
+.taskform .firstrow{display:flex;gap:9px}
+.taskform .firstrow input{flex:1;width:100%}
+.taskform .firstrow .btn{flex:none}
+.subjectrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.subjectrow label{font-size:12px;color:var(--muted)}
+.subjectrow select{min-height:44px;padding:6px 10px;font-size:13px;flex:1;max-width:210px}
+.subjectrow .quiet{margin-left:auto}
+.filterhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:23px;margin-bottom:10px;font-size:12px;color:var(--muted)}
+.filterhead strong{font-weight:600;overflow-wrap:anywhere}
+.filters{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:17px}
+.filterbtn{border:1px solid var(--line);background:#fffdf9;color:var(--muted);border-radius:99px;font-size:12px;padding:7px 13px;min-height:44px;max-width:100%;overflow-wrap:anywhere;line-height:1.45}
+.filterbtn[aria-pressed=true]{background:#fce5cd;color:var(--orange-dark);border-color:#edbf92;font-weight:650}
+.tasklist{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.task{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:9px;align-items:center;padding:11px 9px 11px 7px;background:white;border:1px solid var(--line);border-radius:13px}
+.task.done{background:#faf7f1}
+.task-check-wrap{display:grid;place-items:center;width:44px;height:44px}
+.taskcheck{appearance:none;width:23px;height:23px;min-height:23px;padding:0;border:1.5px solid #d5c6b3;border-radius:7px;cursor:pointer;position:relative}
+.taskcheck:checked{background:var(--green);border-color:var(--green)}
+.taskcheck:checked:after{content:"";position:absolute;left:7px;top:3px;width:6px;height:11px;border:solid white;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.taskbody{min-width:0}
+.tasktext{font-size:14px;overflow-wrap:anywhere;line-height:1.65}
+.done .tasktext{text-decoration:line-through;color:#998b7d}
+.subjecttag{display:inline-block;font-size:10px;color:#8b7157;background:#f6eddf;border-radius:5px;padding:1px 6px;margin-top:4px;max-width:100%;overflow-wrap:anywhere}
+.task-actions{display:flex;gap:1px}
+.task-actions button{font-size:12px;padding:8px;min-width:44px}
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:45px 16px 40px;gap:9px;color:var(--muted)}
+.empty-art{width:78px;height:72px;color:#b69d80;margin-bottom:5px}
+.empty strong{font-size:14px;font-weight:600}
+.empty p{font-size:12px;max-width:270px}
+.taskfoot{font-size:11px;color:#a18c79;border-top:1px dashed var(--line);margin-top:22px;padding-top:13px}
+.insights{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr);gap:22px;margin-top:22px}
+.statscard,.achievementcard{padding:22px}
+.section-description{font-size:12px;color:var(--muted);margin-top:-6px;margin-bottom:18px}
+.chart{display:grid;gap:16px}
+.chart-label{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:6px}
+.chart-label span:first-child{min-width:0;overflow-wrap:anywhere}
+.chart-label span:last-child{flex:none;color:var(--muted);font-variant-numeric:tabular-nums}
+.chart-track{height:11px;border-radius:5px;background:#f4ebdf;overflow:hidden}
+.chart-track span{display:block;height:100%;border-radius:5px;background:#d5a36e;min-width:0}
+.chart-row:first-child .chart-track span{background:var(--orange)}
+.chart-empty{font-size:12px;color:var(--muted);background:#fbf6ed;border-radius:11px;padding:14px;margin-bottom:17px}
+.badges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.badge{background:#f8f4ed;border:1px solid #eee5d9;border-radius:13px;padding:13px 10px 11px;text-align:center;min-width:0}
+.badge.unlocked{background:#fff2dd;border-color:#ecc393}
+.badge-symbol{width:40px;height:40px;margin:0 auto 8px;border-radius:50%;background:#ebe3d6;color:#ae9a80;display:grid;place-items:center}
+.badge-symbol svg{width:23px;height:23px}
+.unlocked .badge-symbol{background:#f8cd8e;color:#a25523}
+.badge h3{font-size:12px;overflow-wrap:anywhere}
+.badge-condition{color:var(--muted);font-size:10px;margin-top:3px;min-height:16px}
+.badge-status{font-size:10px;color:var(--muted);margin-top:7px}
+.unlocked .badge-status{color:var(--orange-dark);font-weight:600}
+.badge .progress{height:4px;margin-top:7px}
+.badge .progress span{background:#c7aa86}
+.badge-progress-text{font-size:10px;color:var(--muted);margin-top:4px;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.footer{margin-top:24px;text-align:center;font-size:12px;color:var(--muted)}
+.storage-note{display:flex;justify-content:center;gap:7px;align-items:center;flex-wrap:wrap}
+.storage-status{font-size:11px;display:block;margin-top:3px}
+.storage-status.warning{color:#a24b32;background:#fff0de;border:1px solid #edd1b3;padding:10px;border-radius:10px;overflow-wrap:anywhere}
+.help{max-width:650px;margin:12px auto 0;text-align:left;font-size:12px}
+.help summary{text-align:center;cursor:pointer;min-height:44px;padding:10px}
+.help p{padding:5px 12px 10px;line-height:1.8}
+.toast{position:fixed;bottom:24px;right:24px;max-width:min(360px,calc(100vw - 32px));z-index:20;background:#61472f;color:#fff9e8;padding:14px 18px;border-radius:15px;box-shadow:0 8px 28px #3f2b2526;font-size:14px;overflow-wrap:anywhere}
+dialog{border:1px solid var(--line);border-radius:20px;padding:0;color:var(--ink);background:var(--card);width:min(430px,calc(100vw - 32px));max-height:calc(100dvh - 40px);overflow:auto;box-shadow:0 25px 80px #36221430}
+dialog::backdrop{background:#4c382953;backdrop-filter:blur(3px)}
+.dialog-inner{padding:25px}
+.dialog-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:14px}
+.dialog-top h2{font-size:19px}
+.dialog-close{background:transparent;border:0;width:44px;border-radius:10px;color:var(--muted);font-size:24px;padding:0}
+.dialog-copy{font-size:13px;color:var(--muted);margin-bottom:17px;overflow-wrap:anywhere}
+.dialog-inner .field{margin-top:13px}
+.dialog-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:23px}
+.dialog-inner input,.dialog-inner select{width:100%}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:880px){.tasklist{max-height:638px;overflow:auto;padding-right:3px}}
+@media(max-width:900px){.app{padding:24px 18px}.workspace{grid-template-columns:320px minmax(0,1fr);gap:16px}.insights{gap:16px;grid-template-columns:1fr 1.3fr}.taskcard{padding:20px}.task{grid-template-columns:44px minmax(0,1fr)}.task-actions{grid-column:2;justify-content:flex-end;margin-top:-5px}.task-check-wrap{width:44px}.badges{grid-template-columns:repeat(2,minmax(0,1fr))}.subjectrow .quiet{margin-left:0}}
+@media(max-width:700px){.app{padding:22px 14px}.header{gap:10px;margin-bottom:20px;align-items:flex-start}.brandmark{width:43px;height:43px;border-radius:14px}.brandmark svg{width:25px}.brand{gap:10px}h1{font-size:24px}.subtitle{font-size:11px}.date{padding:7px 9px;font-size:11px}.date .icon{display:none}.overview{padding:17px;gap:12px 14px;margin-bottom:16px}.overviewnumbers{gap:7px;flex-wrap:wrap}.overviewnumbers strong{font-size:24px}.overviewnumbers span{font-size:12px}.snackbox{padding:11px 13px;min-width:112px;gap:8px}.snack-icon{width:27px;height:27px}.snacknumber{font-size:22px}.snackbox small{font-size:10px}.workspace{grid-template-columns:1fr;gap:16px}.studycolumn{gap:16px}.dogtop{padding-top:13px}.dogscene{height:155px}.dogscene:before{height:125px;top:13px;width:185px}.dogbutton{width:200px;height:155px}.speech{margin-bottom:9px;padding:10px;min-height:43px}.doghint{margin-bottom:12px}.timercard{padding:20px}.clock{font-size:68px}.taskcard{padding:19px;min-height:0}.task{grid-template-columns:44px minmax(0,1fr) auto}.task-actions{grid-column:auto;margin-top:0}.task-actions button{padding:6px;font-size:11px}.insights{grid-template-columns:1fr;gap:16px;margin-top:16px}.statscard,.achievementcard{padding:20px}.badges{grid-template-columns:repeat(3,minmax(0,1fr))}.sectionhead{margin-bottom:14px}.toast{bottom:16px;right:16px}.empty{padding:28px 12px}}
+@media(max-width:390px){.date{font-size:10px;padding:6px 8px}.subtitle{letter-spacing:0}.brand{gap:8px}.overviewnumbers span{font-size:11px}.overviewhead .tag{display:none}.taskform{padding:12px}.taskform .firstrow{flex-wrap:wrap}.taskform .firstrow .btn{width:100%}.task{grid-template-columns:44px minmax(0,1fr)}.task-actions{grid-column:2;justify-content:flex-end}.subjectrow{gap:8px}.subjectrow select{max-width:100%}.badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="header">
+    <div class="brand"><div class="brandmark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="currentColor"><ellipse cx="16" cy="22" rx="9" ry="7"/><ellipse cx="7" cy="12" rx="3.4" ry="4.3" transform="rotate(-20 7 12)"/><ellipse cx="14" cy="7" rx="3.2" ry="4.2"/><ellipse cx="22" cy="8" rx="3.2" ry="4.2" transform="rotate(14 22 8)"/><ellipse cx="27" cy="15" rx="3" ry="4" transform="rotate(25 27 15)"/></svg></div><div><h1>讀書柴犬</h1><p class="subtitle">任務清單與專注計時器</p></div></div>
+    <div class="date"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16"/></svg><span id="date-label"></span></div>
+  </header>
+  <section class="card overview" aria-label="全部任務進度">
+    <div><div class="overviewhead">全部任務進度 <span class="tag">一件一件，慢慢完成</span></div><div class="overviewnumbers"><strong id="completion-percent">0%</strong><span id="completion-count">已完成 0／0 項</span></div></div>
+    <div class="progress" id="task-progress" role="progressbar" aria-label="全部任務完成比例" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div>
+    <div class="snackbox"><svg class="snack-icon" viewBox="0 0 44 44" aria-hidden="true"><path d="M13 14c-4-7-13-2-9 4 1 2 2 3 4 3l17 14c0 4 4 6 7 3 2-2 2-4 1-6 7 1 9-8 3-10-3-1-5 0-6 2L14 12Z" fill="#efba74" stroke="#c78c45" stroke-width="1.6"/><path d="m16 21 7 6" stroke="#d69a51" stroke-width="2" stroke-linecap="round"/></svg><div><div class="snacknumber"><span id="snack-count">0</span> <small style="display:inline;font-size:11px">個</small></div><small>柴犬的點心</small></div></div>
+  </section>
+  <main>
+    <div class="workspace">
+      <div class="studycolumn">
+        <section class="card dogcard" id="dog-card" data-state="idle" aria-label="柴犬陪讀">
+          <div class="dogtop"><div class="dogname"><span id="pet-name">柴柴</span><span style="font-size:12px;font-weight:400;color:#a08060"> 的陪讀小角落</span></div><button class="btn quiet smallbtn namebtn" id="rename-open" type="button" aria-label="替柴犬改名字">改名字</button></div>
+          <div class="dogscene"><button class="dogbutton" id="dog-button" type="button" aria-label="點擊柴柴，聽一句鼓勵">
+            <svg viewBox="0 0 280 230" aria-hidden="true">
+              <defs><linearGradient id="dogfur" x1="0" y1="0" x2=".8" y2="1"><stop stop-color="#eaa057"/><stop offset="1" stop-color="#d7833e"/></linearGradient></defs>
+              <ellipse cx="145" cy="214" rx="88" ry="8" fill="#dbc39f" opacity=".45"/>
+              <g class="dog-standing">
+                <g class="dogtail"><path d="M203 177c45 11 40-39 16-29-14 6-7 26 5 18" fill="none" stroke="#d98440" stroke-width="18" stroke-linecap="round"/><path d="M222 149c-8 3-9 13-6 18" fill="none" stroke="#fff0d8" stroke-width="10" stroke-linecap="round"/></g>
+                <path d="M94 136c-17 17-20 50-10 67h115c12-29 1-58-15-67Z" fill="url(#dogfur)" stroke="#be753a" stroke-width="1.8"/>
+                <ellipse cx="141" cy="171" rx="31" ry="34" fill="#fff1d9"/>
+                <path d="M99 171v30c0 16 23 16 23 0v-27m39 0v27c0 16 23 16 23 0v-29" fill="#f2ac65" stroke="#c88141" stroke-width="1.8" stroke-linecap="round"/>
+                <path d="M99 199h23m39 0h23" stroke="#fff2dd" stroke-width="11"/>
+                <g class="dog-head">
+                  <path d="m81 75 1-51c0-6 5-9 10-5l37 34m25-1 35-34c5-4 10-1 10 5l2 50" fill="#dd8d49" stroke="#be753a" stroke-width="2.3" stroke-linejoin="round"/>
+                  <path d="m90 56 1-24 19 20m64 0 17-20 1 25" fill="#e6b398"/>
+                  <path d="M78 94c0-42 31-55 63-55s65 15 65 55c0 41-28 61-65 61S78 137 78 94Z" fill="url(#dogfur)" stroke="#be753a" stroke-width="2"/>
+                  <path d="M83 102c13 0 24 12 34 12 11 0 12-8 24-8s14 8 25 8c11 0 23-12 36-12-4 30-24 47-61 47-33 0-53-15-58-47Z" fill="#fff0d7"/>
+                  <path d="m102 81 10-3m60 3-10-3" stroke="#ffdfae" stroke-width="5" stroke-linecap="round"/>
+                  <ellipse cx="111" cy="97" rx="4" ry="5.3" fill="#513927"/><ellipse cx="170" cy="97" rx="4" ry="5.3" fill="#513927"/>
+                  <circle cx="99" cy="111" r="7" fill="#e79577" opacity=".55"/><circle cx="181" cy="111" r="7" fill="#e79577" opacity=".55"/>
+                  <path d="M133 111q8-5 16 0l-8 8Z" fill="#523727" stroke="#523727" stroke-width="2" stroke-linejoin="round"/>
+                  <path d="M141 119v5m0 0q-7 9-15 1m15-1q7 9 15 1" fill="none" stroke="#674530" stroke-width="2.3" stroke-linecap="round"/>
+                  <g class="doghappy"><path d="M129 126q12 18 24 0" fill="#7f4636"/><path d="M137 131v7q5 7 10 0v-7" fill="#ed9b8e"/></g>
+                  <g class="dogglasses" fill="none" stroke="#78654e" stroke-width="3"><rect x="94" y="87" width="34" height="24" rx="8"/><rect x="153" y="87" width="34" height="24" rx="8"/><path d="M128 96q12-7 25 0m-59-3-12-5m105 5 12-5"/></g>
+                </g>
+                <g class="dogbook"><path d="M102 170q17-7 39 3 21-10 39-3v38q-17-7-39 1-21-8-39-1Z" fill="#879577" stroke="#596d50" stroke-width="2"/><path d="M109 174q15-4 32 4 15-8 32-4v26q-15-4-32 4-17-8-32-4Z" fill="#fffae8"/><path d="M141 178v26m-27-22 20 4m-20 3 20 4m14-7 20-4m-20 11 20-4" stroke="#d5c3a3" stroke-width="1.5"/><ellipse cx="101" cy="187" rx="10" ry="12" fill="#f1ad67"/><ellipse cx="181" cy="187" rx="10" ry="12" fill="#f1ad67"/></g>
+              </g>
+              <g class="dog-rest">
+                <path d="M182 179c31-13 50 6 27 20" fill="none" stroke="#d98440" stroke-width="16" stroke-linecap="round"/>
+                <ellipse cx="158" cy="190" rx="58" ry="26" fill="url(#dogfur)" stroke="#c38447" stroke-width="2"/>
+                <path d="m71 141-1-28 25 16m36-1 22-17 1 29" fill="#da8c49" stroke="#c38447" stroke-width="2"/>
+                <ellipse cx="111" cy="161" rx="47" ry="38" fill="url(#dogfur)" stroke="#c38447" stroke-width="2"/>
+                <path d="M69 165q19 9 43 6 24 2 44-7c-4 25-22 33-45 33-25 0-39-11-42-32Z" fill="#fff0d7"/>
+                <path d="M85 158q7-7 14 0m25 0q7-7 14 0" fill="none" stroke="#674530" stroke-width="2.5" stroke-linecap="round"/>
+                <path d="m105 171 6 5 6-5Z" fill="#553c2c"/><path d="M111 176v4m0 0q-6 6-11 1m11-1q6 6 11 1" fill="none" stroke="#674530" stroke-width="1.8" stroke-linecap="round"/>
+                <ellipse cx="91" cy="202" rx="27" ry="9" fill="#ffefda" stroke="#d4a776" stroke-width="1.5"/><ellipse cx="142" cy="203" rx="25" ry="8" fill="#ffefda" stroke="#d4a776" stroke-width="1.5"/>
+              </g>
+              <g class="stars" fill="#e9af40"><path d="m51 80 4 9 10 1-8 7 2 10-8-5-9 5 2-10-7-7 10-1Z"/><path d="m226 43 3 7 8 1-6 5 1 8-6-4-7 4 2-8-6-5 8-1Z"/><path d="m235 120 3 6 6 1-5 4 1 7-5-4-6 4 1-7-4-4 6-1Z"/></g>
+            </svg>
+          </button></div>
+          <p class="speech" id="dog-speech" aria-live="polite">準備好了嗎？一起開始吧！</p>
+          <p class="doghint">點一下柴犬，收下一句小小鼓勵</p>
+        </section>
+        <section class="card timercard" aria-labelledby="timer-title">
+          <div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 2h6m-3 0v3m7 2 2 2"/></svg><h2 id="timer-title">專注計時</h2></div><span class="timer-mode" id="timer-mode">專注模式</span></div>
+          <div class="focus-fields" id="focus-fields"><div class="field"><label for="focus-subject">這次讀什麼？</label><select id="focus-subject"></select></div><div class="field"><label for="minutes-input">專注時間</label><div class="minutes-wrap"><input id="minutes-input" type="number" min="1" max="60" step="1" inputmode="numeric" value="25" aria-describedby="timer-error"><span>分</span></div></div></div>
+          <p class="rest-note" id="rest-note" hidden>這五分鐘，伸展一下、喝口水吧。</p>
+          <p class="error" id="timer-error" role="alert" hidden></p>
+          <div class="timerface"><div class="clock" id="clock" aria-label="剩餘時間 25 分 0 秒">25:00</div><p class="timerstate" id="timer-state">選好科目，準備一起專心</p><div class="progress timertrack" role="progressbar" id="timer-progress" aria-label="本輪倒數進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div></div>
+          <div class="timercontrols"><button class="btn primary" id="start-button" type="button">開始</button><button class="btn secondary" id="pause-button" type="button" disabled>暫停</button><button class="btn secondary" id="reset-button" type="button">重設</button></div>
+          <p class="timer-message" id="timer-message" role="status" hidden></p>
+          <div class="break-actions" id="break-actions" hidden><button class="btn secondary" id="break-button" type="button">開始 5 分鐘休息</button></div>
+          <div class="break-actions" id="back-actions" hidden><button class="btn secondary" id="back-button" type="button">返回專注</button></div>
+          <div class="time-summary"><div><small>今日專注時間</small><strong id="today-time">0 分 00 秒</strong></div><div><small>累積專注時間</small><strong id="total-time">0 分 00 秒</strong></div></div>
+        </section>
+      </div>
+      <section class="card taskcard" aria-labelledby="tasks-title">
+        <div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="5" y="4" width="15" height="17" rx="3"/><path d="M9 2v4m5-4v4M9 10h7m-7 4h7m-7 4h4"/></svg><h2 id="tasks-title">我的讀書任務</h2></div><span class="taskhead-note" id="visible-count">0 項任務</span></div>
+        <form class="taskform" id="task-form" novalidate>
+          <label class="sr-only" for="task-input">新增任務內容</label>
+          <div class="firstrow"><input id="task-input" type="text" placeholder="今天想完成哪件事？" autocomplete="off" aria-describedby="task-error"><button class="btn primary" type="submit">＋ 新增任務</button></div>
+          <div class="subjectrow"><label for="task-subject">科目</label><select id="task-subject"></select><button class="btn quiet smallbtn" id="subject-open" type="button">＋ 新增科目</button></div>
+          <p class="error" id="task-error" role="alert" hidden></p>
+        </form>
+        <div class="filterhead"><strong id="filter-label">目前查看：全部</strong><span>篩選不影響總進度</span></div>
+        <div class="filters" id="filters" role="group" aria-label="依科目篩選任務"></div>
+        <ul class="tasklist" id="task-list" aria-label="讀書任務"></ul>
+        <div class="empty" id="task-empty"><svg class="empty-art" viewBox="0 0 90 80" fill="none" aria-hidden="true"><path d="M19 21q13-5 26 2 13-7 26-2v39q-13-5-26 2-13-7-26-2Z" fill="#f3e5d0" stroke="currentColor" stroke-width="2"/><path d="M45 23v39M26 32l12 2m-12 6 12 2m14-8 12-2m-12 10 12-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m11 12 2 3m63 0 3-3M9 40H5m76 0h4" stroke="#dab990" stroke-width="2" stroke-linecap="round"/></svg><strong id="empty-title">還沒有讀書任務，先新增一項吧！</strong><p id="empty-copy">把大目標拆成小步驟，柴犬會陪你一件件完成。</p></div>
+        <p class="taskfoot">勾選完成，就能替柴犬準備一個點心。取消完成時，點心也會跟著調整。</p>
+      </section>
+    </div>
+    <div class="insights">
+      <section class="card statscard" aria-labelledby="stats-title"><div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 3v17h17M8 16v-5m5 5V7m5 9V4"/></svg><h2 id="stats-title">時間花在哪裡？</h2></div><span class="pill">全部累積</span></div><p class="section-description">每一小段專心，都有好好留下來。</p><p class="chart-empty" id="chart-empty">還沒有專注紀錄，選個科目和柴犬一起開始吧！</p><div class="chart" id="subject-chart" aria-label="各科目累積專注時間"></div></section>
+      <section class="card achievementcard" aria-labelledby="achievements-title"><div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 2.8 5.6 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.5l6.2-.9Z"/></svg><h2 id="achievements-title">一起收集小成就</h2></div><span class="pill" id="achievement-count">0／5</span></div><p class="section-description">記住曾經達成的努力，慢慢累積就好。</p><div class="badges" id="badges"></div></section>
+    </div>
+  </main>
+  <footer class="footer"><p class="storage-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h11l4 4v14H3V3h3Zm1 0v6h10V3M7 21v-8h10v8"/></svg>資料保存在此瀏覽器，換裝置不會自動同步。</p><p class="storage-status" id="storage-status" role="status">任務、科目、名字與努力紀錄都會自動保存。</p><details class="help"><summary>使用小提醒</summary><p>點心代表目前已完成的任務數；成就記錄你曾經達成的努力。專注暫停、重設都不會刪除已累積的時間，休息時間不算專注。重新整理後，計時器回到設定時間，等待你手動開始；網頁關閉期間不會繼續累積。清除網站資料會移除紀錄。</p></details></footer>
+</div>
+<div class="toast" id="achievement-toast" role="status" hidden></div>
+<div class="sr-only" id="action-announcement" aria-live="polite"></div>
+<dialog id="rename-dialog" aria-labelledby="rename-title"><form class="dialog-inner" id="rename-form" novalidate><div class="dialog-top"><h2 id="rename-title">替陪讀柴犬取個名字</h2><button class="dialog-close" type="button" data-close="rename-dialog" aria-label="關閉">×</button></div><p class="dialog-copy">下次回來，牠還是你熟悉的讀書搭檔。</p><div class="field"><label for="pet-input">柴犬名字</label><input id="pet-input" type="text" autocomplete="off" aria-describedby="pet-error"></div><p class="error" id="pet-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="rename-dialog">取消</button><button class="btn primary" type="submit">保存名字</button></div></form></dialog>
+<dialog id="subject-dialog" aria-labelledby="subject-title"><form class="dialog-inner" id="subject-form" novalidate><div class="dialog-top"><h2 id="subject-title">新增自己的科目</h2><button class="dialog-close" type="button" data-close="subject-dialog" aria-label="關閉">×</button></div><p class="dialog-copy">新增後，就能用在任務分類與專注統計。</p><div class="field"><label for="subject-input">科目名稱</label><input id="subject-input" type="text" autocomplete="off" placeholder="例如：程式設計" aria-describedby="subject-error"></div><p class="error" id="subject-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="subject-dialog">取消</button><button class="btn primary" type="submit">新增科目</button></div></form></dialog>
+<dialog id="edit-dialog" aria-labelledby="edit-title"><form class="dialog-inner" id="edit-form" novalidate><div class="dialog-top"><h2 id="edit-title">編輯讀書任務</h2><button class="dialog-close" type="button" data-close="edit-dialog" aria-label="關閉">×</button></div><div class="field"><label for="edit-input">任務內容</label><input id="edit-input" type="text" autocomplete="off" aria-describedby="edit-error"></div><div class="field"><label for="edit-subject">所屬科目</label><select id="edit-subject"></select></div><p class="error" id="edit-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="edit-dialog">取消</button><button class="btn primary" type="submit">保存修改</button></div></form></dialog>
+<dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-inner"><div class="dialog-top"><h2 id="delete-title">刪除這項任務？</h2><button class="dialog-close" type="button" data-close="delete-dialog" aria-label="關閉">×</button></div><p class="dialog-copy" id="delete-copy"></p><p class="dialog-copy">已累積的專注時間與解鎖成就都會保留。</p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="delete-dialog">取消</button><button class="btn danger" id="delete-confirm" type="button">確認刪除</button></div></div></dialog>
+<noscript><p style="padding:20px;text-align:center">請開啟瀏覽器的 JavaScript，才能使用任務與計時功能。</p></noscript>
+<script id="study-core">
+"use strict";
+const StudyCore = (function () {
+  const DEFAULT_SUBJECTS = [{id:"circuits",name:"電路"},{id:"math",name:"數學"},{id:"english",name:"英文"},{id:"other",name:"其他"}];
+  const ACHIEVEMENTS = [
+    {id:"first-step",name:"第一小步",condition:"首次完成一項任務",targetMs:0,icon:"paw"},
+    {id:"warm-up",name:"暖身完成",condition:"累積專注 10 分鐘",targetMs:600000,icon:"sun"},
+    {id:"in-flow",name:"進入狀態",condition:"累積專注 30 分鐘",targetMs:1800000,icon:"book"},
+    {id:"one-hour",name:"一小時夥伴",condition:"累積專注 60 分鐘",targetMs:3600000,icon:"star"},
+    {id:"study-partner",name:"柴犬讀書搭檔",condition:"累積專注 180 分鐘",targetMs:10800000,icon:"trophy"}
+  ];
+  function initialData() {
+    return {version:2,subjects:DEFAULT_SUBJECTS.map(function(s){return Object.assign({},s)}),tasks:[],petName:"柴柴",settings:{minutes:25,subjectId:"other"},focusRecords:[],achievements:{}};
+  }
+  function text(value){return typeof value==="string"?value.trim():""}
+  function subjectKey(value){return text(value).toLocaleLowerCase()}
+  function minutesValid(value){return String(value).trim()!==""&&Number.isInteger(Number(value))&&Number(value)>=1&&Number(value)<=60}
+  function subjectError(name,subjects){
+    const value=text(name);
+    if(!value)return "請輸入科目名稱。";
+    if(value==="全部")return "「全部」是篩選選項，請使用其他科目名稱。";
+    if(subjects.some(function(s){return subjectKey(s.name)===subjectKey(value)}))return "這個科目已經存在，請使用不同名稱。";
+    return "";
+  }
+  function dateKey(ms){const d=new Date(ms);return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+  function validDateKey(value){
+    if(typeof value!=="string"||!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;
+    const parts=value.split("-").map(Number),d=new Date(parts[0],parts[1]-1,parts[2]);
+    return dateKey(d.getTime())===value;
+  }
+  function recordMs(r){return r.seconds*1000+r.remainderMs}
+  function setRecordMs(r,ms){r.seconds=Math.floor(ms/1000);r.remainderMs=ms%1000}
+  function addFocus(data,startMs,endMs,subjectId){
+    let cursor=Math.round(startMs),end=Math.round(endMs);
+    if(!Number.isFinite(cursor)||!Number.isFinite(end)||end<=cursor)return;
+    while(cursor<end){
+      const d=new Date(cursor),midnight=new Date(d.getFullYear(),d.getMonth(),d.getDate()+1).getTime();
+      const stop=Math.min(end,midnight),key=dateKey(cursor);
+      let record=data.focusRecords.find(function(r){return r.date===key&&r.subjectId===subjectId});
+      if(!record){record={date:key,subjectId:subjectId,seconds:0,remainderMs:0};data.focusRecords.push(record)}
+      setRecordMs(record,recordMs(record)+stop-cursor);
+      cursor=stop;
+    }
+  }
+  function totalMs(data,date,subjectId){
+    return data.focusRecords.reduce(function(sum,r){return sum+((!date||r.date===date)&&(!subjectId||r.subjectId===subjectId)?recordMs(r):0)},0);
+  }
+  function taskSummary(data){
+    const total=data.tasks.length,completed=data.tasks.filter(function(t){return t.completed}).length;
+    return {total:total,completed:completed,percent:total?Math.round(completed/total*100):0,snacks:completed};
+  }
+  function unlockEligible(data,now){
+    const total=totalMs(data),first=data.tasks.some(function(t){return t.completed}),newly=[];
+    ACHIEVEMENTS.forEach(function(a){
+      if(!data.achievements[a.id]&&(a.targetMs?total>=a.targetMs:first)){data.achievements[a.id]={unlockedAt:now};newly.push(a)}
+    });
+    return newly;
+  }
+  function normalize(raw){
+    const result=initialData();let invalid=false;
+    if(!raw||typeof raw!=="object"||Array.isArray(raw))return {data:result,invalid:true};
+    if(raw.version!==2)invalid=true;
+    const subjects=Array.isArray(raw.subjects)?raw.subjects:[];if(!Array.isArray(raw.subjects))invalid=true;
+    subjects.forEach(function(s){
+      if(!s||typeof s.id!=="string"||!s.id||!text(s.name)){invalid=true;return}
+      if(DEFAULT_SUBJECTS.some(function(d){return d.id===s.id})){
+        if(!DEFAULT_SUBJECTS.some(function(d){return d.id===s.id&&d.name===s.name}))invalid=true;
+        return;
+      }
+      if(result.subjects.some(function(d){return d.id===s.id})||subjectError(s.name,result.subjects)){invalid=true;return}
+      result.subjects.push({id:s.id,name:text(s.name)});
+    });
+    const known=new Set(result.subjects.map(function(s){return s.id})),ids=new Set();
+    if(!Array.isArray(raw.tasks))invalid=true;
+    (Array.isArray(raw.tasks)?raw.tasks:[]).forEach(function(t){
+      if(!t||typeof t.id!=="string"||!t.id||ids.has(t.id)||!text(t.text)){invalid=true;return}
+      ids.add(t.id);let sub=known.has(t.subjectId)?t.subjectId:"other";
+      if(sub!==t.subjectId||typeof t.completed!=="boolean")invalid=true;
+      result.tasks.push({id:t.id,text:text(t.text),subjectId:sub,completed:t.completed===true});
+    });
+    if(text(raw.petName))result.petName=text(raw.petName);else invalid=true;
+    if(raw.settings&&minutesValid(raw.settings.minutes))result.settings.minutes=Number(raw.settings.minutes);else invalid=true;
+    if(raw.settings&&known.has(raw.settings.subjectId))result.settings.subjectId=raw.settings.subjectId;else invalid=true;
+    if(!Array.isArray(raw.focusRecords))invalid=true;
+    (Array.isArray(raw.focusRecords)?raw.focusRecords:[]).forEach(function(r){
+      if(!r||!validDateKey(r.date)||!known.has(r.subjectId)||!Number.isSafeInteger(r.seconds)||r.seconds<0||!Number.isInteger(r.remainderMs)||r.remainderMs<0||r.remainderMs>999){invalid=true;return}
+      let record=result.focusRecords.find(function(x){return x.date===r.date&&x.subjectId===r.subjectId});
+      if(!record){record={date:r.date,subjectId:r.subjectId,seconds:0,remainderMs:0};result.focusRecords.push(record)}
+      const combined=recordMs(record)+recordMs(r);
+      if(!Number.isSafeInteger(combined)){invalid=true;return}
+      setRecordMs(record,combined);
+    });
+    if(!raw.achievements||typeof raw.achievements!=="object")invalid=true;
+    ACHIEVEMENTS.forEach(function(a){
+      const r=raw.achievements&&raw.achievements[a.id];
+      if(r){result.achievements[a.id]={unlockedAt:Number.isFinite(r.unlockedAt)&&r.unlockedAt>=0?r.unlockedAt:0};if(!Number.isFinite(r.unlockedAt))invalid=true}
+    });
+    return {data:result,invalid:invalid};
+  }
+  class Timer {
+    constructor(minutes,subjectId){this.minutes=minutes;this.subjectId=subjectId;this.mode="focus";this.status="idle";this.remainingMs=minutes*60000;this.lastAt=null}
+    get durationMs(){return this.mode==="focus"?this.minutes*60000:300000}
+    configure(minutes,subjectId){
+      if(this.mode!=="focus"||this.status==="running"||this.status==="paused"||!minutesValid(minutes))return false;
+      this.minutes=Number(minutes);this.subjectId=subjectId;this.remainingMs=this.durationMs;this.status="idle";return true;
+    }
+    start(now){
+      if(this.status!=="idle"&&this.status!=="finished")return false;
+      if(this.status==="finished")this.remainingMs=this.durationMs;
+      this.status="running";this.lastAt=now;return true;
+    }
+    resume(now){if(this.status!=="paused")return false;this.status="running";this.lastAt=now;return true}
+    tick(now){
+      if(this.status!=="running")return {interval:null,ended:null};
+      const elapsed=Math.max(0,now-this.lastAt),applied=Math.min(elapsed,this.remainingMs),from=this.lastAt;
+      this.lastAt=Math.max(this.lastAt,now);this.remainingMs=Math.max(0,this.remainingMs-applied);
+      const interval=this.mode==="focus"&&applied>0?{startMs:from,endMs:from+applied,subjectId:this.subjectId}:null;
+      let ended=null;
+      if(this.remainingMs===0){this.status="finished";this.lastAt=null;ended=this.mode}
+      return {interval:interval,ended:ended};
+    }
+    pause(){if(this.status!=="running")return false;this.status="paused";this.lastAt=null;return true}
+    reset(){this.status="idle";this.remainingMs=this.durationMs;this.lastAt=null}
+    startRest(now){if(this.mode!=="focus"||this.status!=="finished")return false;this.mode="rest";this.reset();return this.start(now)}
+    backToFocus(){if(this.mode!=="rest")return false;this.mode="focus";this.reset();return true}
+  }
+  return {initialData:initialData,normalize:normalize,subjectError:subjectError,minutesValid:minutesValid,dateKey:dateKey,addFocus:addFocus,totalMs:totalMs,taskSummary:taskSummary,unlockEligible:unlockEligible,Timer:Timer,ACHIEVEMENTS:ACHIEVEMENTS};
+})();
+</script>
+<script id="study-app">
+"use strict";
+(function(){
+  const $=function(id){return document.getElementById(id)},C=StudyCore,STORAGE_KEY="study-shiba.v2";
+  let data=C.initialData(),readWarning="",saveFailed=false,dirty=false,lastSaveAt=0,filterId="all",editId=null,deleteId=null;
+  try{
+    const stored=localStorage.getItem(STORAGE_KEY);
+    if(stored!==null){try{const loaded=C.normalize(JSON.parse(stored));data=loaded.data;if(loaded.invalid)readWarning="部分資料無法讀取，已盡可能保留可用紀錄。"}catch(e){readWarning="保存資料無法讀取，目前使用預設內容。"}}
+  }catch(e){saveFailed=true}
+  const timer=new C.Timer(data.settings.minutes,data.settings.subjectId);
+  const restored=C.unlockEligible(data,Date.now());if(restored.length)dirty=true;
+  let queue=[],currentEvent=null,eventTimeout=null,lastMetricsKey="",lastDay="";
+  const encouragements=["先完成一小步，就已經很棒！","喝口水，慢慢來，我會陪你。","不用一次做完，我們一件一件來。","今天的努力，都有好好留下來。","汪！你專心的樣子很帥氣。","累了可以休息，再一起出發。"];
+  const completeMessages=["完成一項了，做得好！","汪！又往前一步了！","這個點心，是你的努力換來的！","小任務完成，大大的進步！"];
+  function uid(){return typeof crypto!=="undefined"&&typeof crypto.randomUUID==="function"?crypto.randomUUID():Date.now().toString(36)+"-"+Math.random().toString(36).slice(2)}
+  function subjectName(id){const s=data.subjects.find(function(s){return s.id===id});return s?s.name:"其他"}
+  function el(tag,cls,content){const n=document.createElement(tag);if(cls)n.className=cls;if(content!==undefined)n.textContent=content;return n}
+  function setText(node,value){if(node.textContent!==value)node.textContent=value}
+  function random(items){return items[Math.floor(Math.random()*items.length)]}
+  function formatTime(ms){const sec=Math.floor(ms/1000);return Math.floor(sec/60)+" 分 "+String(sec%60).padStart(2,"0")+" 秒"}
+  function formatMinutes(ms){return (Math.floor(ms/600)/100).toFixed(2)}
+  function clockText(ms){const s=Math.ceil(ms/1000);return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+  function error(id,msg,input){const n=$(id);n.textContent=msg;n.hidden=!msg;if(input)input.setAttribute("aria-invalid",msg?"true":"false")}
+  function announce(msg){$("action-announcement").textContent=msg}
+  function renderStorage(){
+    const n=$("storage-status"),msg=saveFailed?"目前無法保存資料，重新整理後可能遺失變更。":readWarning||"任務、科目、名字與努力紀錄都會自動保存。";
+    setText(n,msg);n.classList.toggle("warning",!!(saveFailed||readWarning));
+  }
+  function save(){
+    if(!dirty){renderStorage();return}
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(data));saveFailed=false;dirty=false;lastSaveAt=Date.now()}catch(e){saveFailed=true}
+    renderStorage();
+  }
+  function changed(){dirty=true;save()}
+  function showDialog(id){$(id).showModal()}
+  function closeDialog(id){$(id).close();if(id==="edit-dialog")editId=null;if(id==="delete-dialog")deleteId=null}
+  function baseDog(){
+    if(timer.mode==="rest")return {state:"rest",text:timer.status==="finished"?"休息結束了，準備好再開始。":timer.status==="paused"?"休息一下，等等再一起努力。":"休息一下，補充精神。"};
+    if(timer.status==="running")return {state:"focus",text:"我陪你專心讀"+subjectName(timer.subjectId)+"。"};
+    if(timer.status==="paused")return {state:"pause",text:"休息一下，等等再一起努力。"};
+    if(timer.status==="finished")return {state:"ended",text:"辛苦了，要休息五分鐘嗎？"};
+    return {state:"idle",text:"準備好了嗎？一起開始吧！"};
+  }
+  function renderDog(){
+    const state=currentEvent||baseDog();
+    $("dog-card").dataset.state=state.state;setText($("dog-speech"),state.text);setText($("pet-name"),data.petName);
+    $("dog-button").setAttribute("aria-label","點擊"+data.petName+"，聽一句鼓勵");
+  }
+  function pump(){
+    if(currentEvent||document.hidden)return;
+    if(!queue.length){$("achievement-toast").hidden=true;renderDog();return}
+    currentEvent=queue.shift();renderDog();
+    const toast=$("achievement-toast");toast.hidden=currentEvent.kind!=="achievement";
+    if(!toast.hidden)toast.textContent=currentEvent.text;
+    eventTimeout=setTimeout(function(){currentEvent=null;eventTimeout=null;toast.hidden=true;pump();renderDog()},2000);
+  }
+  function enqueue(events){queue.push.apply(queue,events);pump()}
+  function badgeEvents(badges){return badges.map(function(a){return {kind:"achievement",state:"celebrate",text:"解鎖「"+a.name+"」！"}})}
+  function clearTimerEvents(){
+    queue=queue.filter(function(e){return e.kind!=="timer-end"});
+    if(currentEvent&&currentEvent.kind==="timer-end"){clearTimeout(eventTimeout);eventTimeout=null;currentEvent=null;$("achievement-toast").hidden=true;pump()}
+  }
+  function fillSelect(id,selected){
+    const select=$(id);select.replaceChildren();
+    data.subjects.forEach(function(s){const option=el("option","",s.name);option.value=s.id;select.append(option)});
+    select.value=data.subjects.some(function(s){return s.id===selected})?selected:"other";
+  }
+  function renderSubjects(){
+    const taskSelection=$("task-subject").value||"other",editing=$("edit-subject").value||"other";
+    fillSelect("task-subject",taskSelection);fillSelect("focus-subject",data.settings.subjectId);fillSelect("edit-subject",editing);
+    renderFilters();
+  }
+  function renderFilters(){
+    const target=$("filters");target.replaceChildren();
+    [{id:"all",name:"全部"}].concat(data.subjects).forEach(function(s){
+      const b=el("button","filterbtn",s.name);b.type="button";b.dataset.filter=s.id;b.setAttribute("aria-pressed",String(filterId===s.id));target.append(b);
+    });
+    setText($("filter-label"),"目前查看："+(filterId==="all"?"全部":subjectName(filterId)));
+  }
+  function renderSummary(){
+    const s=C.taskSummary(data);setText($("completion-percent"),s.percent+"%");setText($("completion-count"),"已完成 "+s.completed+"／"+s.total+" 項");setText($("snack-count"),String(s.snacks));
+    $("task-progress").setAttribute("aria-valuenow",String(s.percent));$("task-progress").firstElementChild.style.width=s.percent+"%";
+  }
+  function renderTasks(){
+    const visible=data.tasks.filter(function(t){return filterId==="all"||t.subjectId===filterId}),list=$("task-list");list.replaceChildren();
+    setText($("visible-count"),visible.length+" 項任務");
+    visible.forEach(function(t){
+      const row=el("li","task"+(t.completed?" done":""));row.dataset.taskId=t.id;
+      const label=el("label","task-check-wrap"),check=el("input","taskcheck");
+      check.type="checkbox";check.checked=t.completed;check.dataset.action="toggle";check.setAttribute("aria-label",(t.completed?"取消完成：":"完成：")+t.text);label.append(check);
+      const body=el("div","taskbody");body.append(el("p","tasktext",t.text),el("span","subjecttag",subjectName(t.subjectId)));
+      const actions=el("div","task-actions");
+      [["edit","編輯"],["delete","刪除"]].forEach(function(pair){const b=el("button","btn quiet",pair[1]);b.type="button";b.dataset.action=pair[0];b.setAttribute("aria-label",pair[1]+"："+t.text);actions.append(b)});
+      row.append(label,body,actions);list.append(row);
+    });
+    $("task-empty").hidden=visible.length>0;
+    setText($("empty-title"),filterId==="all"?"還沒有讀書任務，先新增一項吧！":"這個科目目前沒有任務");
+    setText($("empty-copy"),filterId==="all"?"把大目標拆成小步驟，柴犬會陪你一件件完成。":"可以新增這個科目的任務，或切回「全部」查看其他任務。");
+    renderSummary();
+  }
+  function badgeIcon(type){
+    const paths={
+      paw:'<ellipse cx="12" cy="16" rx="6" ry="4.5" fill="currentColor" stroke="none"/><ellipse cx="5" cy="9" rx="2.2" ry="3" fill="currentColor" stroke="none"/><ellipse cx="10" cy="5.5" rx="2" ry="2.8" fill="currentColor" stroke="none"/><ellipse cx="15" cy="5.5" rx="2" ry="2.8" fill="currentColor" stroke="none"/><ellipse cx="20" cy="9" rx="2.2" ry="3" fill="currentColor" stroke="none"/>',
+      sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l2 2m10 10 2 2M5 19l2-2M17 7l2-2"/>',
+      book:'<path d="M3 5q5-2 9 1 4-3 9-1v14q-5-2-9 1-4-3-9-1Zm9 1v14M6 9l3 1m6 0 3-1"/>',
+      star:'<path d="m12 3 2.8 5.6 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.5l6.2-.9Z"/>',
+      trophy:'<path d="M7 3h10v8a5 5 0 0 1-10 0ZM7 5H3v3q0 5 5 5m9-8h4v3q0 5-5 5m-4 3v5m-4 0h8"/>'
+    };
+    const holder=el("div","badge-symbol");holder.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[type]+'</svg>';return holder;
+  }
+  function renderMetrics(force){
+    const total=C.totalMs(data),today=C.totalMs(data,C.dateKey(Date.now())),key=Math.floor(total/1000)+"|"+Math.floor(today/1000)+"|"+data.subjects.length+"|"+Object.keys(data.achievements).length;
+    if(!force&&key===lastMetricsKey)return;lastMetricsKey=key;
+    setText($("today-time"),formatTime(today));setText($("total-time"),formatTime(total));
+    const chart=$("subject-chart");chart.replaceChildren();const totals=data.subjects.map(function(s){return C.totalMs(data,null,s.id)}),max=Math.max.apply(null,totals.concat([0]));
+    $("chart-empty").hidden=total>0;
+    data.subjects.forEach(function(s,i){
+      const row=el("div","chart-row"),label=el("div","chart-label"),track=el("div","chart-track"),bar=el("span");
+      label.append(el("span","",s.name),el("span","",formatMinutes(totals[i])+" 分鐘"));
+      row.setAttribute("aria-label",s.name+"："+formatTime(totals[i]));bar.style.width=(max?totals[i]/max*100:0)+"%";track.append(bar);row.append(label,track);chart.append(row);
+    });
+    const target=$("badges");target.replaceChildren();let unlockedCount=0;
+    C.ACHIEVEMENTS.forEach(function(a){
+      const unlocked=!!data.achievements[a.id];if(unlocked)unlockedCount++;
+      const badge=el("article","badge"+(unlocked?" unlocked":""));badge.append(badgeIcon(a.icon),el("h3","",a.name),el("p","badge-condition",a.condition),el("p","badge-status",unlocked?"✓ 已解鎖":"尚未解鎖"));
+      if(a.targetMs&&!unlocked){
+        const progress=el("div","progress"),fill=el("span"),percent=Math.min(100,total/a.targetMs*100);
+        progress.setAttribute("role","progressbar");progress.setAttribute("aria-label",a.name+"進度");progress.setAttribute("aria-valuemin","0");progress.setAttribute("aria-valuemax","100");progress.setAttribute("aria-valuenow",String(Math.floor(percent)));fill.style.width=percent+"%";progress.append(fill);
+        badge.append(progress,el("p","badge-progress-text",formatMinutes(total)+"／"+a.targetMs/60000+" 分鐘"));
+      }
+      target.append(badge);
+    });
+    setText($("achievement-count"),unlockedCount+"／5");
+  }
+  function renderDate(){
+    const now=Date.now(),key=C.dateKey(now);
+    if(key!==lastDay){lastDay=key;setText($("date-label"),new Date(now).toLocaleDateString("zh-TW",{month:"numeric",day:"numeric",weekday:"short"}));renderMetrics(true)}
+  }
+  function renderTimer(){
+    const rest=timer.mode==="rest",running=timer.status==="running",paused=timer.status==="paused",finished=timer.status==="finished",locked=running||paused||rest;
+    setText($("timer-title"),rest?"休息時間":"專注計時");setText($("timer-mode"),rest?"休息模式":"專注模式");
+    $("focus-fields").hidden=rest;$("rest-note").hidden=!rest;
+    $("focus-subject").disabled=locked;$("minutes-input").disabled=locked;
+    const shown=clockText(timer.remainingMs);setText($("clock"),shown);const secs=Math.ceil(timer.remainingMs/1000);
+    $("clock").setAttribute("aria-label","剩餘時間 "+Math.floor(secs/60)+" 分 "+secs%60+" 秒");
+    setText($("timer-state"),running?(rest?"讓眼睛和腦袋休息一下":"專注中・"+subjectName(timer.subjectId)):paused?"已暫停，準備好再繼續":finished?(rest?"休息結束，手動開始下一輪":"完成這一輪，辛苦了！"):(rest?"準備好就開始休息":"選好科目，準備一起專心"));
+    $("start-button").disabled=running||paused;setText($("start-button"),finished?"再開始":"開始");
+    $("pause-button").disabled=!running&&!paused;setText($("pause-button"),paused?"繼續":"暫停");
+    $("break-actions").hidden=rest||!finished;$("back-actions").hidden=!rest;
+    $("timer-message").hidden=!finished;
+    if(finished)setText($("timer-message"),rest?"休息時間結束，準備好再開始吧！":"專注時間結束，休息一下吧！");
+    const progress=Math.max(0,Math.min(100,(1-timer.remainingMs/timer.durationMs)*100));$("timer-progress").setAttribute("aria-valuenow",String(Math.floor(progress)));$("timer-progress").firstElementChild.style.width=progress+"%";
+    renderDog();
+  }
+  function settle(forceSave){
+    const now=Date.now(),result=timer.tick(now),events=[];
+    if(result.interval){C.addFocus(data,result.interval.startMs,result.interval.endMs,result.interval.subjectId);dirty=true}
+    if(result.ended)events.push({kind:"timer-end",state:result.ended==="focus"?"stretch":"idle",text:result.ended==="focus"?"專注時間結束，休息一下吧！":"休息結束了，準備好再開始。"});
+    const badges=C.unlockEligible(data,now);if(badges.length){dirty=true;events.push.apply(events,badgeEvents(badges))}
+    if(forceSave||result.ended||badges.length||(dirty&&now-lastSaveAt>=1000))save();
+    renderTimer();renderMetrics(false);renderDate();
+    if(events.length)enqueue(events);
+  }
+  function validateMinutes(){
+    if(timer.mode!=="focus"||timer.status==="running"||timer.status==="paused")return true;
+    const input=$("minutes-input");
+    if(!C.minutesValid(input.value)){error("timer-error","請輸入 1～60 的整數分鐘。",input);return false}
+    const minutes=Number(input.value);error("timer-error","",input);
+    if(minutes!==data.settings.minutes){data.settings.minutes=minutes;timer.configure(minutes,data.settings.subjectId);clearTimerEvents();changed();renderTimer()}
+    input.value=String(minutes);return true;
+  }
+  $("minutes-input").addEventListener("change",validateMinutes);
+  $("minutes-input").addEventListener("blur",validateMinutes);
+  $("minutes-input").addEventListener("keydown",function(e){if(e.key==="Enter"){e.preventDefault();validateMinutes()}});
+  $("focus-subject").addEventListener("change",function(){
+    if(timer.status==="running"||timer.status==="paused"||timer.mode!=="focus"){this.value=data.settings.subjectId;return}
+    if(!data.subjects.some(function(s){return s.id===$("focus-subject").value})){this.value=data.settings.subjectId;return}
+    data.settings.subjectId=this.value;timer.configure(data.settings.minutes,this.value);clearTimerEvents();changed();renderTimer();
+  });
+  $("start-button").addEventListener("click",function(){
+    if(timer.status==="running"||timer.status==="paused")return;
+    if(!validateMinutes())return;
+    clearTimerEvents();if(timer.start(Date.now()))renderTimer();
+  });
+  $("pause-button").addEventListener("click",function(){
+    settle(true);if(timer.status==="running")timer.pause();else if(timer.status==="paused")timer.resume(Date.now());renderTimer();
+  });
+  $("reset-button").addEventListener("click",function(){
+    settle(true);timer.reset();$("minutes-input").value=String(data.settings.minutes);error("timer-error","",$("minutes-input"));clearTimerEvents();renderTimer();announce("已重設倒數，累積專注時間保留。");
+  });
+  $("break-button").addEventListener("click",function(){settle(true);clearTimerEvents();if(timer.startRest(Date.now()))renderTimer()});
+  $("back-button").addEventListener("click",function(){settle(true);if(timer.backToFocus()){clearTimerEvents();renderTimer()}});
+  $("task-form").addEventListener("submit",function(e){
+    e.preventDefault();const input=$("task-input"),value=input.value.trim(),sub=$("task-subject").value;
+    if(!value){error("task-error","請輸入任務內容。",input);input.focus();return}
+    if(!data.subjects.some(function(s){return s.id===sub})){error("task-error","請選擇有效科目。");return}
+    data.tasks.push({id:uid(),text:value,subjectId:sub,completed:false});input.value="";error("task-error","",input);changed();renderTasks();announce("已新增任務："+value);input.focus();
+  });
+  $("task-input").addEventListener("input",function(){if(this.value.trim())error("task-error","",this)});
+  $("filters").addEventListener("click",function(e){const b=e.target.closest("button[data-filter]");if(!b)return;filterId=b.dataset.filter;renderFilters();renderTasks();const active=Array.from($("filters").querySelectorAll("button")).find(function(n){return n.dataset.filter===filterId});if(active)active.focus()});
+  $("task-list").addEventListener("change",function(e){
+    const control=e.target;if(control.dataset.action!=="toggle")return;
+    const row=control.closest("[data-task-id]"),task=data.tasks.find(function(t){return t.id===row.dataset.taskId});if(!task)return;
+    const previous=task.completed;task.completed=control.checked;const badges=C.unlockEligible(data,Date.now());changed();renderTasks();renderMetrics(true);
+    if(task.completed&&!previous)enqueue([{kind:"task",state:"happy",text:random(completeMessages)}].concat(badgeEvents(badges)));
+    announce(task.completed?"任務已完成。":"已取消完成。");
+    const restoredCheck=Array.from($("task-list").querySelectorAll("[data-task-id]")).find(function(n){return n.dataset.taskId===task.id});
+    if(restoredCheck)restoredCheck.querySelector("input").focus();
+  });
+  $("task-list").addEventListener("click",function(e){
+    const b=e.target.closest("button[data-action]");if(!b)return;const row=b.closest("[data-task-id]"),task=data.tasks.find(function(t){return t.id===row.dataset.taskId});if(!task)return;
+    if(b.dataset.action==="edit"){editId=task.id;$("edit-input").value=task.text;fillSelect("edit-subject",task.subjectId);error("edit-error","",$("edit-input"));showDialog("edit-dialog")}
+    if(b.dataset.action==="delete"){deleteId=task.id;$("delete-copy").textContent="「"+task.text+"」";showDialog("delete-dialog")}
+  });
+  $("edit-form").addEventListener("submit",function(e){
+    e.preventDefault();const input=$("edit-input"),value=input.value.trim(),sub=$("edit-subject").value,task=data.tasks.find(function(t){return t.id===editId});
+    if(!task){closeDialog("edit-dialog");return}
+    if(!value){error("edit-error","請輸入任務內容。",input);input.focus();return}
+    if(!data.subjects.some(function(s){return s.id===sub})){error("edit-error","請選擇有效科目。");return}
+    task.text=value;task.subjectId=sub;changed();closeDialog("edit-dialog");renderTasks();announce("任務已更新。");$("task-input").focus();
+  });
+  $("delete-confirm").addEventListener("click",function(){
+    data.tasks=data.tasks.filter(function(t){return t.id!==deleteId});changed();closeDialog("delete-dialog");renderTasks();announce("任務已刪除，專注紀錄與成就保留。");$("task-input").focus();
+  });
+  $("subject-open").addEventListener("click",function(){$("subject-input").value="";error("subject-error","",$("subject-input"));showDialog("subject-dialog")});
+  $("subject-form").addEventListener("submit",function(e){
+    e.preventDefault();const input=$("subject-input"),value=input.value.trim(),message=C.subjectError(value,data.subjects);
+    if(message){error("subject-error",message,input);input.focus();return}
+    const s={id:uid(),name:value};data.subjects.push(s);changed();renderSubjects();$("task-subject").value=s.id;renderMetrics(true);closeDialog("subject-dialog");announce("已新增科目："+value);$("task-input").focus();
+  });
+  $("rename-open").addEventListener("click",function(){$("pet-input").value=data.petName;error("pet-error","",$("pet-input"));showDialog("rename-dialog")});
+  $("rename-form").addEventListener("submit",function(e){
+    e.preventDefault();const input=$("pet-input"),value=input.value.trim();if(!value){error("pet-error","請輸入柴犬名字。",input);input.focus();return}
+    data.petName=value;changed();renderDog();closeDialog("rename-dialog");announce("柴犬現在叫"+value+"。");
+  });
+  $("dog-button").addEventListener("click",function(){enqueue([{kind:"encouragement",state:baseDog().state,text:random(encouragements)}])});
+  document.querySelectorAll("[data-close]").forEach(function(b){b.addEventListener("click",function(){closeDialog(b.dataset.close)})});
+  document.querySelectorAll("dialog").forEach(function(d){
+    d.addEventListener("close",function(){if(d.id==="edit-dialog")editId=null;if(d.id==="delete-dialog")deleteId=null});
+    d.addEventListener("click",function(e){if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeDialog(d.id)}});
+  });
+  document.addEventListener("visibilitychange",function(){settle(true);if(!document.hidden)pump()});
+  window.addEventListener("pagehide",function(){settle(true)});
+  window.addEventListener("beforeunload",function(){settle(true)});
+  window.addEventListener("pageshow",function(e){
+    if(e.persisted){timer.mode="focus";timer.reset();queue=[];currentEvent=null;clearTimeout(eventTimeout);$("achievement-toast").hidden=true;renderTimer()}
+  });
+  $("minutes-input").value=String(data.settings.minutes);renderSubjects();renderTasks();renderTimer();renderMetrics(true);renderDate();renderStorage();if(dirty)save();
+  setInterval(function(){settle(false)},250);
+})();
+</script>
+</body>
+</html>
