@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff9f0">
-<meta name="description" content="讓柴犬陪你讀書：任務清單、科目分類、專注計時、讀書統計與成就。">
+<meta name="description" content="讓柴犬陪你讀書：任務清單、科目分類、專注計時、讀書統計、每日目標、截止日與資料備份。">
 <title>讀書柴犬｜任務清單與專注計時器</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='18' fill='%23ef9146'/%3E%3Cpath d='M12 29 15 9 28 20M36 20 49 9 52 29' fill='%23fff2dc'/%3E%3Cellipse cx='32' cy='36' rx='22' ry='20' fill='%23fff2dc'/%3E%3Ccircle cx='24' cy='32' r='3' fill='%23554132'/%3E%3Ccircle cx='40' cy='32' r='3' fill='%23554132'/%3E%3Cpath d='m27 40 5 5 5-5' fill='%23554132'/%3E%3C/svg%3E">
 <style>
@@ -200,12 +200,36 @@ dialog::backdrop{background:#4c382953;backdrop-filter:blur(3px)}
 @media(max-width:700px){.app{padding:22px 14px}.header{gap:10px;margin-bottom:20px;align-items:flex-start}.brandmark{width:43px;height:43px;border-radius:14px}.brandmark svg{width:25px}.brand{gap:10px}h1{font-size:24px}.subtitle{font-size:11px}.date{padding:7px 9px;font-size:11px}.date .icon{display:none}.overview{padding:17px;gap:12px 14px;margin-bottom:16px}.overviewnumbers{gap:7px;flex-wrap:wrap}.overviewnumbers strong{font-size:24px}.overviewnumbers span{font-size:12px}.snackbox{padding:11px 13px;min-width:112px;gap:8px}.snack-icon{width:27px;height:27px}.snacknumber{font-size:22px}.snackbox small{font-size:10px}.workspace{grid-template-columns:1fr;gap:16px}.studycolumn{gap:16px}.dogtop{padding-top:13px}.dogscene{height:155px}.dogscene:before{height:125px;top:13px;width:185px}.dogbutton{width:200px;height:155px}.speech{margin-bottom:9px;padding:10px;min-height:43px}.doghint{margin-bottom:12px}.timercard{padding:20px}.clock{font-size:68px}.taskcard{padding:19px;min-height:0}.task{grid-template-columns:44px minmax(0,1fr) auto}.task-actions{grid-column:auto;margin-top:0}.task-actions button{padding:6px;font-size:11px}.insights{grid-template-columns:1fr;gap:16px;margin-top:16px}.statscard,.achievementcard{padding:20px}.badges{grid-template-columns:repeat(3,minmax(0,1fr))}.sectionhead{margin-bottom:14px}.toast{bottom:16px;right:16px}.empty{padding:28px 12px}}
 @media(max-width:390px){.date{font-size:10px;padding:6px 8px}.subtitle{letter-spacing:0}.brand{gap:8px}.overviewnumbers span{font-size:11px}.overviewhead .tag{display:none}.taskform{padding:12px}.taskform .firstrow{flex-wrap:wrap}.taskform .firstrow .btn{width:100%}.task{grid-template-columns:44px minmax(0,1fr)}.task-actions{grid-column:2;justify-content:flex-end}.subjectrow{gap:8px}.subjectrow select{max-width:100%}.badges{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+
+/* 2.0: task planning, weekly review and portable backups. */
+:root{--muted:#756151;--orange:#be571f;--orange-dark:#954112}
+.subtitle,.date,.overviewhead,.pill,.field label,.field-label,.timer-mode,.timerstate,.time-summary small,.subjectrow label,.filterhead,.filterbtn,.tasktext,.task-actions button,.section-description,.chart-label,.chart-empty,.badge h3,.badge-condition,.badge-status,.badge-progress-text,.footer,.storage-status,.help,.dialog-copy,.error,.taskfoot,.doghint{font-size:.875rem}
+input::placeholder{color:#806c5b}.subjecttag{font-size:.8125rem;color:#74563c}.taskfoot,.doghint{color:var(--muted)}
+select{appearance:none;padding-right:34px!important;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='m1 1 5 5 5-5' fill='none' stroke='%23756151' stroke-width='1.7'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.primary:hover:not(:disabled){background:#a74717}.taskform{border:1px solid #eedfca}.task-options{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.task-tools{display:grid;grid-template-columns:minmax(0,1fr) 118px 128px;gap:8px;margin:14px 0}
+.task-tools input,.task-tools select{width:100%;font-size:.875rem}.task-tools .field label{font-size:.875rem}
+.task-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:5px}.task-meta .subjecttag{margin:0}
+.priority-tag,.due-tag{font-size:.8125rem;border-radius:5px;padding:1px 6px;background:#f5efe8;color:#735b45}.priority-high{background:#fff0e9;color:#a13d25}.due-overdue{background:#ffebe7;color:#a13428}.due-today{background:#fff0cc;color:#795114}
+.task{grid-template-columns:36px minmax(0,1fr)}.task-check-wrap{width:36px}.task-actions{grid-column:2;justify-content:flex-end;flex-wrap:wrap;margin-top:-3px}.task-actions button{font-size:.875rem;min-height:44px}
+.task.focused{border-color:#b6602b;background:#fff9ef}.task-actions .focus-action{color:var(--orange-dark);background:var(--soft)}
+.presets{display:flex;gap:8px;margin-top:12px}.presets .btn{flex:1;font-size:.875rem;padding:6px}.presets .selected{border-color:#c17542;background:var(--soft)}
+.active-task{font-size:.875rem;padding:10px 12px;margin-top:12px;background:var(--soft);border-radius:10px;overflow-wrap:anywhere}
+.goalcard,.weekcard,.backupcard{padding:24px}.goalcard{margin-top:22px}.goal-head{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}.goal-number{font-variant-numeric:tabular-nums;font-size:1.45rem;font-weight:750}.goalcard .progress{height:12px;margin:14px 0 10px}.goal-note{font-size:.875rem;color:var(--muted)}
+.goal-editor{display:flex;align-items:center;flex-wrap:wrap;gap:8px}.goal-editor label{font-size:.875rem}.goal-editor input{width:83px}.goal-editor .btn{padding:9px 12px}
+.review-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;margin-top:22px}.week-chart{height:176px;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;margin-top:18px;align-items:end}.week-column{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;min-width:0;font-size:.875rem}.week-value{font-size:.8125rem;color:var(--muted);font-variant-numeric:tabular-nums}.week-track{height:118px;width:100%;max-width:38px;background:#f5ebdd;border-radius:7px;display:flex;align-items:flex-end;overflow:hidden}.week-bar{width:100%;background:#cc9c6b;border-radius:7px;min-height:0}.week-column.today .week-bar{background:var(--orange)}.week-column.today .week-label{font-weight:700;color:var(--orange-dark)}
+.backup-actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0 10px}.backupcard p{font-size:.875rem;color:var(--muted)}.backupcard .sectionhead{margin-bottom:8px}
+.backup-text{width:100%;height:140px;resize:vertical;font:14px/1.5 ui-monospace,monospace;border:1px solid var(--line);border-radius:10px;padding:12px;color:var(--ink)}.import-summary{padding:12px;background:var(--soft);border-radius:10px;margin:12px 0;font-size:.875rem}
+.version-label{font-size:.875rem;color:var(--orange-dark);font-weight:650;margin:12px 0 0}.skip-link{position:absolute;left:16px;top:-100px;background:white;color:var(--ink);padding:12px;z-index:100}.skip-link:focus{top:16px}
+@media(max-width:900px){.task-tools{grid-template-columns:1fr 1fr}.task-tools .search-field{grid-column:1/-1}.review-grid{grid-template-columns:1fr 1fr}.task-actions{grid-column:2}}
+@media(max-width:700px){.task{grid-template-columns:36px minmax(0,1fr)}.task-actions{grid-column:2}.review-grid{grid-template-columns:1fr;gap:16px;margin-top:16px}.goalcard{margin-top:16px}.goalcard,.weekcard,.backupcard{padding:20px}.goal-number{font-size:1.25rem}.date{font-size:.8125rem}.subtitle{font-size:.8125rem}.badge-condition,.badge-status,.badge-progress-text{font-size:.8125rem}.badges{grid-template-columns:repeat(2,minmax(0,1fr))}.task-options{gap:8px}.week-chart{gap:5px}.overviewhead .tag{font-size:.8125rem}}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#tasks-title">跳至讀書任務</a>
 <div class="app">
   <header class="header">
-    <div class="brand"><div class="brandmark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="currentColor"><ellipse cx="16" cy="22" rx="9" ry="7"/><ellipse cx="7" cy="12" rx="3.4" ry="4.3" transform="rotate(-20 7 12)"/><ellipse cx="14" cy="7" rx="3.2" ry="4.2"/><ellipse cx="22" cy="8" rx="3.2" ry="4.2" transform="rotate(14 22 8)"/><ellipse cx="27" cy="15" rx="3" ry="4" transform="rotate(25 27 15)"/></svg></div><div><h1>讀書柴犬</h1><p class="subtitle">任務清單與專注計時器</p></div></div>
+    <div class="brand"><div class="brandmark" aria-hidden="true"><svg viewBox="0 0 32 32" fill="currentColor"><ellipse cx="16" cy="22" rx="9" ry="7"/><ellipse cx="7" cy="12" rx="3.4" ry="4.3" transform="rotate(-20 7 12)"/><ellipse cx="14" cy="7" rx="3.2" ry="4.2"/><ellipse cx="22" cy="8" rx="3.2" ry="4.2" transform="rotate(14 22 8)"/><ellipse cx="27" cy="15" rx="3" ry="4" transform="rotate(25 27 15)"/></svg></div><div><h1>讀書柴犬</h1><p class="subtitle">任務清單與專注計時器 · 進步，一小步就好</p></div></div>
     <div class="date"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="5" width="16" height="16" rx="3"/><path d="M8 3v4m8-4v4M4 11h16"/></svg><span id="date-label"></span></div>
   </header>
   <section class="card overview" aria-label="全部任務進度">
@@ -263,6 +287,7 @@ dialog::backdrop{background:#4c382953;backdrop-filter:blur(3px)}
           <div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v5l3 2M9 2h6m-3 0v3m7 2 2 2"/></svg><h2 id="timer-title">專注計時</h2></div><span class="timer-mode" id="timer-mode">專注模式</span></div>
           <div class="focus-fields" id="focus-fields"><div class="field"><label for="focus-subject">這次讀什麼？</label><select id="focus-subject"></select></div><div class="field"><label for="minutes-input">專注時間</label><div class="minutes-wrap"><input id="minutes-input" type="number" min="1" max="60" step="1" inputmode="numeric" value="25" aria-describedby="timer-error"><span>分</span></div></div></div>
           <p class="rest-note" id="rest-note" hidden>這五分鐘，伸展一下、喝口水吧。</p>
+          <div class="presets" role="group" aria-label="常用專注時間"><button class="btn secondary" type="button" data-minutes="15">15 分</button><button class="btn secondary" type="button" data-minutes="25">25 分</button><button class="btn secondary" type="button" data-minutes="50">50 分</button></div><p class="active-task" id="active-task" hidden></p>
           <p class="error" id="timer-error" role="alert" hidden></p>
           <div class="timerface"><div class="clock" id="clock" aria-label="剩餘時間 25 分 0 秒">25:00</div><p class="timerstate" id="timer-state">選好科目，準備一起專心</p><div class="progress timertrack" role="progressbar" id="timer-progress" aria-label="本輪倒數進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div></div>
           <div class="timercontrols"><button class="btn primary" id="start-button" type="button">開始</button><button class="btn secondary" id="pause-button" type="button" disabled>暫停</button><button class="btn secondary" id="reset-button" type="button">重設</button></div>
@@ -278,28 +303,34 @@ dialog::backdrop{background:#4c382953;backdrop-filter:blur(3px)}
           <label class="sr-only" for="task-input">新增任務內容</label>
           <div class="firstrow"><input id="task-input" type="text" placeholder="今天想完成哪件事？" autocomplete="off" aria-describedby="task-error"><button class="btn primary" type="submit">＋ 新增任務</button></div>
           <div class="subjectrow"><label for="task-subject">科目</label><select id="task-subject"></select><button class="btn quiet smallbtn" id="subject-open" type="button">＋ 新增科目</button></div>
+          <div class="task-options"><div class="field"><label for="task-priority">優先順序</label><select id="task-priority"><option value="normal">一般</option><option value="high">優先處理</option><option value="low">有空再做</option></select></div><div class="field"><label for="task-due">截止日期（選填）</label><input type="date" id="task-due" aria-describedby="task-error"></div></div>
           <p class="error" id="task-error" role="alert" hidden></p>
         </form>
         <div class="filterhead"><strong id="filter-label">目前查看：全部</strong><span>篩選不影響總進度</span></div>
         <div class="filters" id="filters" role="group" aria-label="依科目篩選任務"></div>
+        <div class="task-tools"><div class="field search-field"><label for="task-search">搜尋任務</label><input type="search" id="task-search" placeholder="輸入任務關鍵字" autocomplete="off"></div><div class="field"><label for="task-status">任務狀態</label><select id="task-status"><option value="all">全部狀態</option><option value="pending">未完成</option><option value="completed">已完成</option><option value="overdue">已逾期</option></select></div><div class="field"><label for="task-sort">排列方式</label><select id="task-sort"><option value="plan">建議順序</option><option value="added">新增順序</option><option value="due">截止日優先</option></select></div></div>
+        <p class="goal-note" id="task-result" aria-live="polite"></p>
         <ul class="tasklist" id="task-list" aria-label="讀書任務"></ul>
         <div class="empty" id="task-empty"><svg class="empty-art" viewBox="0 0 90 80" fill="none" aria-hidden="true"><path d="M19 21q13-5 26 2 13-7 26-2v39q-13-5-26 2-13-7-26-2Z" fill="#f3e5d0" stroke="currentColor" stroke-width="2"/><path d="M45 23v39M26 32l12 2m-12 6 12 2m14-8 12-2m-12 10 12-2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="m11 12 2 3m63 0 3-3M9 40H5m76 0h4" stroke="#dab990" stroke-width="2" stroke-linecap="round"/></svg><strong id="empty-title">還沒有讀書任務，先新增一項吧！</strong><p id="empty-copy">把大目標拆成小步驟，柴犬會陪你一件件完成。</p></div>
         <p class="taskfoot">勾選完成，就能替柴犬準備一個點心。取消完成時，點心也會跟著調整。</p>
       </section>
     </div>
+    <section class="card goalcard" aria-labelledby="goal-title"><div class="goal-head"><div><h2 id="goal-title">今天，留一點時間給自己</h2><p class="goal-number" id="goal-value">0 / 60 分鐘</p></div><form class="goal-editor" id="goal-form" novalidate><label for="daily-goal">每日目標</label><input type="number" id="daily-goal" min="5" max="480" step="1" value="60" aria-describedby="goal-error"><span>分</span><button class="btn secondary" type="submit">設定</button></form></div><p class="error" id="goal-error" role="alert" hidden></p><div class="progress" id="goal-progress" role="progressbar" aria-label="今日專注目標進度" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span></span></div><p class="goal-note" id="goal-note">不急，從一小段專注開始。</p></section>
+    <div class="review-grid"><section class="card weekcard" aria-labelledby="week-title"><div class="sectionhead"><h2 id="week-title">把努力，連成一週</h2><span class="pill">近七天</span></div><p class="goal-note" id="week-summary">最近七天專注 0 分鐘</p><div class="week-chart" id="week-chart" aria-label="近七天每日專注分鐘數"></div><p class="goal-note">依裝置本地日期統計；包含今天，沒有紀錄也會顯示。</p></section><section class="card backupcard" aria-labelledby="backup-title"><div class="sectionhead"><h2 id="backup-title">把讀書紀錄帶著走</h2></div><p>任務與努力會自動存下來，也能匯出備份，在另一個瀏覽器匯入。</p><div class="backup-actions"><button class="btn secondary" type="button" id="export-backup">匯出備份</button><button class="btn secondary" type="button" id="import-open">匯入備份</button></div><p>匯入前會檢查內容並顯示摘要；確認後取代目前資料。專注或休息進行中時，請先回到待機再匯入。</p><p class="error" id="backup-error" role="alert" hidden></p><p class="goal-note" id="backup-status" role="status"></p></section></div>
     <div class="insights">
       <section class="card statscard" aria-labelledby="stats-title"><div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 3v17h17M8 16v-5m5 5V7m5 9V4"/></svg><h2 id="stats-title">時間花在哪裡？</h2></div><span class="pill">全部累積</span></div><p class="section-description">每一小段專心，都有好好留下來。</p><p class="chart-empty" id="chart-empty">還沒有專注紀錄，選個科目和柴犬一起開始吧！</p><div class="chart" id="subject-chart" aria-label="各科目累積專注時間"></div></section>
       <section class="card achievementcard" aria-labelledby="achievements-title"><div class="sectionhead"><div class="sectiontitle"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m12 3 2.8 5.6 6.2.9-4.5 4.4 1.1 6.2-5.6-2.9-5.6 2.9 1.1-6.2L3 9.5l6.2-.9Z"/></svg><h2 id="achievements-title">一起收集小成就</h2></div><span class="pill" id="achievement-count">0／5</span></div><p class="section-description">記住曾經達成的努力，慢慢累積就好。</p><div class="badges" id="badges"></div></section>
     </div>
   </main>
-  <footer class="footer"><p class="storage-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h11l4 4v14H3V3h3Zm1 0v6h10V3M7 21v-8h10v8"/></svg>資料保存在此瀏覽器，換裝置不會自動同步。</p><p class="storage-status" id="storage-status" role="status">任務、科目、名字與努力紀錄都會自動保存。</p><details class="help"><summary>使用小提醒</summary><p>點心代表目前已完成的任務數；成就記錄你曾經達成的努力。專注暫停、重設都不會刪除已累積的時間，休息時間不算專注。重新整理後，計時器回到設定時間，等待你手動開始；網頁關閉期間不會繼續累積。清除網站資料會移除紀錄。</p></details></footer>
+  <footer class="footer"><p class="version-label">讀書柴犬 2.0 · 每一小步，都算數</p><p class="storage-note"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M6 3h11l4 4v14H3V3h3Zm1 0v6h10V3M7 21v-8h10v8"/></svg>資料保存在此瀏覽器，換裝置不會自動同步。</p><p class="storage-status" id="storage-status" role="status">任務、科目、名字與努力紀錄都會自動保存。</p><details class="help"><summary>使用小提醒</summary><p>點心代表目前已完成的任務數；成就記錄你曾經達成的努力。專注暫停、重設都不會刪除已累積的時間，休息時間不算專注。重新整理後，計時器回到設定時間，等待你手動開始；網頁關閉期間不會繼續累積。清除網站資料會移除紀錄，建議定期匯出備份。建議順序會先列未完成任務，再依優先順序、截止日排列；篩選與搜尋都不改變全部任務進度。請使用單一分頁計時；背景計時以經過時間補算，上限為本輪時間，不會自動開始下一輪。</p></details></footer>
 </div>
 <div class="toast" id="achievement-toast" role="status" hidden></div>
 <div class="sr-only" id="action-announcement" aria-live="polite"></div>
 <dialog id="rename-dialog" aria-labelledby="rename-title"><form class="dialog-inner" id="rename-form" novalidate><div class="dialog-top"><h2 id="rename-title">替陪讀柴犬取個名字</h2><button class="dialog-close" type="button" data-close="rename-dialog" aria-label="關閉">×</button></div><p class="dialog-copy">下次回來，牠還是你熟悉的讀書搭檔。</p><div class="field"><label for="pet-input">柴犬名字</label><input id="pet-input" type="text" autocomplete="off" aria-describedby="pet-error"></div><p class="error" id="pet-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="rename-dialog">取消</button><button class="btn primary" type="submit">保存名字</button></div></form></dialog>
 <dialog id="subject-dialog" aria-labelledby="subject-title"><form class="dialog-inner" id="subject-form" novalidate><div class="dialog-top"><h2 id="subject-title">新增自己的科目</h2><button class="dialog-close" type="button" data-close="subject-dialog" aria-label="關閉">×</button></div><p class="dialog-copy">新增後，就能用在任務分類與專注統計。</p><div class="field"><label for="subject-input">科目名稱</label><input id="subject-input" type="text" autocomplete="off" placeholder="例如：程式設計" aria-describedby="subject-error"></div><p class="error" id="subject-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="subject-dialog">取消</button><button class="btn primary" type="submit">新增科目</button></div></form></dialog>
-<dialog id="edit-dialog" aria-labelledby="edit-title"><form class="dialog-inner" id="edit-form" novalidate><div class="dialog-top"><h2 id="edit-title">編輯讀書任務</h2><button class="dialog-close" type="button" data-close="edit-dialog" aria-label="關閉">×</button></div><div class="field"><label for="edit-input">任務內容</label><input id="edit-input" type="text" autocomplete="off" aria-describedby="edit-error"></div><div class="field"><label for="edit-subject">所屬科目</label><select id="edit-subject"></select></div><p class="error" id="edit-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="edit-dialog">取消</button><button class="btn primary" type="submit">保存修改</button></div></form></dialog>
+<dialog id="edit-dialog" aria-labelledby="edit-title"><form class="dialog-inner" id="edit-form" novalidate><div class="dialog-top"><h2 id="edit-title">編輯讀書任務</h2><button class="dialog-close" type="button" data-close="edit-dialog" aria-label="關閉">×</button></div><div class="field"><label for="edit-input">任務內容</label><input id="edit-input" type="text" autocomplete="off" aria-describedby="edit-error"></div><div class="field"><label for="edit-subject">所屬科目</label><select id="edit-subject"></select></div><div class="task-options"><div class="field"><label for="edit-priority">優先順序</label><select id="edit-priority"><option value="normal">一般</option><option value="high">優先處理</option><option value="low">有空再做</option></select></div><div class="field"><label for="edit-due">截止日期（選填）</label><input type="date" id="edit-due"></div></div><p class="error" id="edit-error" role="alert" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="edit-dialog">取消</button><button class="btn primary" type="submit">保存修改</button></div></form></dialog>
 <dialog id="delete-dialog" aria-labelledby="delete-title"><div class="dialog-inner"><div class="dialog-top"><h2 id="delete-title">刪除這項任務？</h2><button class="dialog-close" type="button" data-close="delete-dialog" aria-label="關閉">×</button></div><p class="dialog-copy" id="delete-copy"></p><p class="dialog-copy">已累積的專注時間與解鎖成就都會保留。</p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="delete-dialog">取消</button><button class="btn danger" id="delete-confirm" type="button">確認刪除</button></div></div></dialog>
+<dialog id="import-dialog" aria-labelledby="import-title"><div class="dialog-inner"><div class="dialog-top"><h2 id="import-title">匯入讀書紀錄</h2><button class="dialog-close" type="button" data-close="import-dialog" aria-label="關閉">×</button></div><p class="dialog-copy">選取之前匯出的 JSON 備份（上限 2 MB），或貼上檔案內容。檢查通過後，再決定是否取代目前資料。建議先匯出目前紀錄。</p><div class="field"><label for="backup-file">選取備份檔</label><input type="file" id="backup-file" accept=".json,application/json"></div><div class="field"><label for="backup-text">或貼上備份內容</label><textarea id="backup-text" class="backup-text" spellcheck="false" aria-describedby="import-error"></textarea></div><p class="error" id="import-error" role="alert" hidden></p><p class="import-summary" id="import-summary" hidden></p><div class="dialog-actions"><button class="btn secondary" type="button" data-close="import-dialog">取消</button><button class="btn secondary" type="button" id="check-backup">檢查備份</button><button class="btn primary" type="button" id="confirm-import" disabled>確認取代</button></div></div></dialog>
 <noscript><p style="padding:20px;text-align:center">請開啟瀏覽器的 JavaScript，才能使用任務與計時功能。</p></noscript>
 <script id="study-core">
 "use strict";
@@ -313,7 +344,7 @@ const StudyCore = (function () {
     {id:"study-partner",name:"柴犬讀書搭檔",condition:"累積專注 180 分鐘",targetMs:10800000,icon:"trophy"}
   ];
   function initialData() {
-    return {version:2,subjects:DEFAULT_SUBJECTS.map(function(s){return Object.assign({},s)}),tasks:[],petName:"柴柴",settings:{minutes:25,subjectId:"other"},focusRecords:[],achievements:{}};
+    return {version:3,subjects:DEFAULT_SUBJECTS.map(function(s){return Object.assign({},s)}),tasks:[],petName:"柴柴",settings:{minutes:25,subjectId:"other",dailyGoal:60},focusRecords:[],achievements:{}};
   }
   function text(value){return typeof value==="string"?value.trim():""}
   function subjectKey(value){return text(value).toLocaleLowerCase()}
@@ -362,7 +393,7 @@ const StudyCore = (function () {
   function normalize(raw){
     const result=initialData();let invalid=false;
     if(!raw||typeof raw!=="object"||Array.isArray(raw))return {data:result,invalid:true};
-    if(raw.version!==2)invalid=true;
+    if(raw.version!==2&&raw.version!==3)invalid=true;
     const subjects=Array.isArray(raw.subjects)?raw.subjects:[];if(!Array.isArray(raw.subjects))invalid=true;
     subjects.forEach(function(s){
       if(!s||typeof s.id!=="string"||!s.id||!text(s.name)){invalid=true;return}
@@ -379,11 +410,15 @@ const StudyCore = (function () {
       if(!t||typeof t.id!=="string"||!t.id||ids.has(t.id)||!text(t.text)){invalid=true;return}
       ids.add(t.id);let sub=known.has(t.subjectId)?t.subjectId:"other";
       if(sub!==t.subjectId||typeof t.completed!=="boolean")invalid=true;
-      result.tasks.push({id:t.id,text:text(t.text),subjectId:sub,completed:t.completed===true});
+      let priority=t.priority===undefined?"normal":t.priority,dueDate=t.dueDate===undefined?"":t.dueDate;
+      if(!["high","normal","low"].includes(priority)){invalid=true;priority="normal"}
+      if(dueDate!==""&&!validDateKey(dueDate)){invalid=true;dueDate=""}
+      result.tasks.push({id:t.id,text:text(t.text),subjectId:sub,completed:t.completed===true,priority:priority,dueDate:dueDate});
     });
     if(text(raw.petName))result.petName=text(raw.petName);else invalid=true;
     if(raw.settings&&minutesValid(raw.settings.minutes))result.settings.minutes=Number(raw.settings.minutes);else invalid=true;
     if(raw.settings&&known.has(raw.settings.subjectId))result.settings.subjectId=raw.settings.subjectId;else invalid=true;
+    if(raw.settings&&raw.settings.dailyGoal!==undefined){if(goalValid(raw.settings.dailyGoal))result.settings.dailyGoal=Number(raw.settings.dailyGoal);else invalid=true}
     if(!Array.isArray(raw.focusRecords))invalid=true;
     (Array.isArray(raw.focusRecords)?raw.focusRecords:[]).forEach(function(r){
       if(!r||!validDateKey(r.date)||!known.has(r.subjectId)||!Number.isSafeInteger(r.seconds)||r.seconds<0||!Number.isInteger(r.remainderMs)||r.remainderMs<0||r.remainderMs>999){invalid=true;return}
@@ -399,6 +434,25 @@ const StudyCore = (function () {
       if(r){result.achievements[a.id]={unlockedAt:Number.isFinite(r.unlockedAt)&&r.unlockedAt>=0?r.unlockedAt:0};if(!Number.isFinite(r.unlockedAt))invalid=true}
     });
     return {data:result,invalid:invalid};
+  }
+  function goalValid(value){return String(value).trim()!==""&&Number.isInteger(Number(value))&&Number(value)>=5&&Number(value)<=480}
+  function dueState(task,today){if(task.completed||!task.dueDate)return "";return task.dueDate<today?"overdue":task.dueDate===today?"today":"future"}
+  function visibleTasks(data,options){
+    const o=options||{},today=o.today||dateKey(Date.now()),query=text(o.query).toLocaleLowerCase(),rank={high:0,normal:1,low:2};
+    return data.tasks.filter(function(t){return (!o.subjectId||o.subjectId==="all"||t.subjectId===o.subjectId)&&(!query||t.text.toLocaleLowerCase().includes(query))&&(!o.status||o.status==="all"||(o.status==="pending"&&!t.completed)||(o.status==="completed"&&t.completed)||(o.status==="overdue"&&dueState(t,today)==="overdue"))}).sort(function(a,b){
+      if(o.sort==="added")return 0;
+      const completed=Number(a.completed)-Number(b.completed);if(completed)return completed;
+      const due=(a.dueDate||"9999-12-31").localeCompare(b.dueDate||"9999-12-31");
+      return o.sort==="due"?due:((rank[a.priority||"normal"]-rank[b.priority||"normal"])||due);
+    });
+  }
+  function weekStats(data,now){const day=new Date(now);return Array.from({length:7},function(_,i){const date=dateKey(new Date(day.getFullYear(),day.getMonth(),day.getDate()-6+i).getTime());return {date:date,ms:totalMs(data,date)}})}
+  function parseBackup(value){
+    if(typeof value!=="string"||new TextEncoder().encode(value).length>2097152)throw Error("備份大小需在 2 MB 以內。");
+    let raw;try{raw=JSON.parse(value)}catch(e){throw Error("無法解析 JSON，請確認貼上完整備份。")}
+    if(!raw||raw.app!=="study-shiba"||raw.backupVersion!==1||!raw.data)throw Error("這不是支援的讀書柴犬備份。");
+    const checked=normalize(raw.data);if(checked.invalid)throw Error("備份資料不完整或格式錯誤，目前紀錄沒有變更。");
+    return checked.data;
   }
   class Timer {
     constructor(minutes,subjectId){this.minutes=minutes;this.subjectId=subjectId;this.mode="focus";this.status="idle";this.remainingMs=minutes*60000;this.lastAt=null}
@@ -427,14 +481,14 @@ const StudyCore = (function () {
     startRest(now){if(this.mode!=="focus"||this.status!=="finished")return false;this.mode="rest";this.reset();return this.start(now)}
     backToFocus(){if(this.mode!=="rest")return false;this.mode="focus";this.reset();return true}
   }
-  return {initialData:initialData,normalize:normalize,subjectError:subjectError,minutesValid:minutesValid,dateKey:dateKey,addFocus:addFocus,totalMs:totalMs,taskSummary:taskSummary,unlockEligible:unlockEligible,Timer:Timer,ACHIEVEMENTS:ACHIEVEMENTS};
+  return {initialData:initialData,normalize:normalize,goalValid:goalValid,dueState:dueState,visibleTasks:visibleTasks,weekStats:weekStats,parseBackup:parseBackup,subjectError:subjectError,minutesValid:minutesValid,dateKey:dateKey,addFocus:addFocus,totalMs:totalMs,taskSummary:taskSummary,unlockEligible:unlockEligible,Timer:Timer,ACHIEVEMENTS:ACHIEVEMENTS};
 })();
 </script>
 <script id="study-app">
 "use strict";
 (function(){
   const $=function(id){return document.getElementById(id)},C=StudyCore,STORAGE_KEY="study-shiba.v2";
-  let data=C.initialData(),readWarning="",saveFailed=false,dirty=false,lastSaveAt=0,filterId="all",editId=null,deleteId=null;
+  let data=C.initialData(),readWarning="",saveFailed=false,dirty=false,lastSaveAt=0,filterId="all",editId=null,deleteId=null,activeTaskId=null,pendingImport=null;
   try{
     const stored=localStorage.getItem(STORAGE_KEY);
     if(stored!==null){try{const loaded=C.normalize(JSON.parse(stored));data=loaded.data;if(loaded.invalid)readWarning="部分資料無法讀取，已盡可能保留可用紀錄。"}catch(e){readWarning="保存資料無法讀取，目前使用預設內容。"}}
@@ -514,20 +568,23 @@ const StudyCore = (function () {
     $("task-progress").setAttribute("aria-valuenow",String(s.percent));$("task-progress").firstElementChild.style.width=s.percent+"%";
   }
   function renderTasks(){
-    const visible=data.tasks.filter(function(t){return filterId==="all"||t.subjectId===filterId}),list=$("task-list");list.replaceChildren();
+    const visible=C.visibleTasks(data,{subjectId:filterId,query:$("task-search").value,status:$("task-status").value,sort:$("task-sort").value}),list=$("task-list");list.replaceChildren();
+    setText($("task-result"),"顯示 "+visible.length+"／"+data.tasks.length+" 項；上方完成比例依全部任務計算。");
     setText($("visible-count"),visible.length+" 項任務");
     visible.forEach(function(t){
-      const row=el("li","task"+(t.completed?" done":""));row.dataset.taskId=t.id;
+      const row=el("li","task"+(t.completed?" done":""));row.dataset.taskId=t.id;row.classList.toggle("focused",t.id===activeTaskId);
       const label=el("label","task-check-wrap"),check=el("input","taskcheck");
       check.type="checkbox";check.checked=t.completed;check.dataset.action="toggle";check.setAttribute("aria-label",(t.completed?"取消完成：":"完成：")+t.text);label.append(check);
-      const body=el("div","taskbody");body.append(el("p","tasktext",t.text),el("span","subjecttag",subjectName(t.subjectId)));
+      const body=el("div","taskbody");body.append(el("p","tasktext",t.text));
+      const meta=el("div","task-meta");meta.append(el("span","subjecttag",subjectName(t.subjectId)),el("span","priority-tag priority-"+t.priority,({high:"優先處理",normal:"一般",low:"有空再做"})[t.priority]||"一般"));
+      if(t.dueDate){const due=C.dueState(t,C.dateKey(Date.now()));meta.append(el("span","due-tag due-"+due,(due==="overdue"?"已逾期 · ":due==="today"?"今天截止 · ":"截止 · ")+t.dueDate))}body.append(meta);
       const actions=el("div","task-actions");
-      [["edit","編輯"],["delete","刪除"]].forEach(function(pair){const b=el("button","btn quiet",pair[1]);b.type="button";b.dataset.action=pair[0];b.setAttribute("aria-label",pair[1]+"："+t.text);actions.append(b)});
+      [["focus","專注"],["edit","編輯"],["delete","刪除"]].forEach(function(pair){const b=el("button","btn quiet",pair[1]);b.type="button";b.dataset.action=pair[0];b.setAttribute("aria-label",pair[1]+"："+t.text);if(pair[0]==="focus"){b.classList.add("focus-action");b.disabled=t.completed||timer.status==="running"||timer.status==="paused"||timer.mode==="rest"}actions.append(b)});
       row.append(label,body,actions);list.append(row);
     });
     $("task-empty").hidden=visible.length>0;
-    setText($("empty-title"),filterId==="all"?"還沒有讀書任務，先新增一項吧！":"這個科目目前沒有任務");
-    setText($("empty-copy"),filterId==="all"?"把大目標拆成小步驟，柴犬會陪你一件件完成。":"可以新增這個科目的任務，或切回「全部」查看其他任務。");
+    setText($("empty-title"),data.tasks.length?"沒有符合條件的任務":filterId==="all"?"還沒有讀書任務，先新增一項吧！":"這個科目目前沒有任務");
+    setText($("empty-copy"),data.tasks.length?"試試其他關鍵字、科目或狀態，任務紀錄仍會保留。":filterId==="all"?"把大目標拆成小步驟，柴犬會陪你一件件完成。":"可以新增這個科目的任務，或切回「全部」查看其他任務。");
     renderSummary();
   }
   function badgeIcon(type){
@@ -541,6 +598,7 @@ const StudyCore = (function () {
     const holder=el("div","badge-symbol");holder.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+paths[type]+'</svg>';return holder;
   }
   function renderMetrics(force){
+    renderReview();
     const total=C.totalMs(data),today=C.totalMs(data,C.dateKey(Date.now())),key=Math.floor(total/1000)+"|"+Math.floor(today/1000)+"|"+data.subjects.length+"|"+Object.keys(data.achievements).length;
     if(!force&&key===lastMetricsKey)return;lastMetricsKey=key;
     setText($("today-time"),formatTime(today));setText($("total-time"),formatTime(total));
@@ -566,7 +624,7 @@ const StudyCore = (function () {
   }
   function renderDate(){
     const now=Date.now(),key=C.dateKey(now);
-    if(key!==lastDay){lastDay=key;setText($("date-label"),new Date(now).toLocaleDateString("zh-TW",{month:"numeric",day:"numeric",weekday:"short"}));renderMetrics(true)}
+    if(key!==lastDay){lastDay=key;setText($("date-label"),new Date(now).toLocaleDateString("zh-TW",{month:"numeric",day:"numeric",weekday:"short"}));renderMetrics(true);renderTasks()}
   }
   function renderTimer(){
     const rest=timer.mode==="rest",running=timer.status==="running",paused=timer.status==="paused",finished=timer.status==="finished",locked=running||paused||rest;
@@ -582,7 +640,11 @@ const StudyCore = (function () {
     $("timer-message").hidden=!finished;
     if(finished)setText($("timer-message"),rest?"休息時間結束，準備好再開始吧！":"專注時間結束，休息一下吧！");
     const progress=Math.max(0,Math.min(100,(1-timer.remainingMs/timer.durationMs)*100));$("timer-progress").setAttribute("aria-valuenow",String(Math.floor(progress)));$("timer-progress").firstElementChild.style.width=progress+"%";
-    renderDog();
+    document.title=(running||paused?shown+" · "+(paused?"已暫停":rest?"休息中":"專注中")+"｜":"")+"讀書柴犬｜任務清單與專注計時器";
+    document.querySelectorAll("[data-minutes]").forEach(function(b){b.disabled=locked;b.classList.toggle("selected",Number(b.dataset.minutes)===timer.minutes)});
+    document.querySelectorAll('[data-action="focus"]').forEach(function(b){const t=data.tasks.find(function(t){return t.id===b.closest("[data-task-id]").dataset.taskId});b.disabled=locked||!!(t&&t.completed)});
+    const active=data.tasks.find(function(t){return t.id===activeTaskId});$("active-task").hidden=!active;if(active)setText($("active-task"),"這輪任務："+active.text);
+    $("import-open").disabled=locked;renderDog();
   }
   function settle(forceSave){
     const now=Date.now(),result=timer.tick(now),events=[];
@@ -607,7 +669,7 @@ const StudyCore = (function () {
   $("focus-subject").addEventListener("change",function(){
     if(timer.status==="running"||timer.status==="paused"||timer.mode!=="focus"){this.value=data.settings.subjectId;return}
     if(!data.subjects.some(function(s){return s.id===$("focus-subject").value})){this.value=data.settings.subjectId;return}
-    data.settings.subjectId=this.value;timer.configure(data.settings.minutes,this.value);clearTimerEvents();changed();renderTimer();
+    activeTaskId=null;data.settings.subjectId=this.value;timer.configure(data.settings.minutes,this.value);clearTimerEvents();changed();renderTimer();
   });
   $("start-button").addEventListener("click",function(){
     if(timer.status==="running"||timer.status==="paused")return;
@@ -618,7 +680,7 @@ const StudyCore = (function () {
     settle(true);if(timer.status==="running")timer.pause();else if(timer.status==="paused")timer.resume(Date.now());renderTimer();
   });
   $("reset-button").addEventListener("click",function(){
-    settle(true);timer.reset();$("minutes-input").value=String(data.settings.minutes);error("timer-error","",$("minutes-input"));clearTimerEvents();renderTimer();announce("已重設倒數，累積專注時間保留。");
+    settle(true);activeTaskId=null;timer.reset();$("minutes-input").value=String(data.settings.minutes);error("timer-error","",$("minutes-input"));clearTimerEvents();renderTimer();announce("已重設倒數，累積專注時間保留。");
   });
   $("break-button").addEventListener("click",function(){settle(true);clearTimerEvents();if(timer.startRest(Date.now()))renderTimer()});
   $("back-button").addEventListener("click",function(){settle(true);if(timer.backToFocus()){clearTimerEvents();renderTimer()}});
@@ -626,7 +688,8 @@ const StudyCore = (function () {
     e.preventDefault();const input=$("task-input"),value=input.value.trim(),sub=$("task-subject").value;
     if(!value){error("task-error","請輸入任務內容。",input);input.focus();return}
     if(!data.subjects.some(function(s){return s.id===sub})){error("task-error","請選擇有效科目。");return}
-    data.tasks.push({id:uid(),text:value,subjectId:sub,completed:false});input.value="";error("task-error","",input);changed();renderTasks();announce("已新增任務："+value);input.focus();
+    const due=$("task-due").value;if(due&&!/^\d{4}-\d{2}-\d{2}$/.test(due)){error("task-error","請選擇有效截止日期。",$("task-due"));return}
+    data.tasks.push({id:uid(),text:value,subjectId:sub,completed:false,priority:$("task-priority").value,dueDate:due});input.value="";error("task-error","",input);changed();renderTasks();announce("已新增任務："+value);input.focus();
   });
   $("task-input").addEventListener("input",function(){if(this.value.trim())error("task-error","",this)});
   $("filters").addEventListener("click",function(e){const b=e.target.closest("button[data-filter]");if(!b)return;filterId=b.dataset.filter;renderFilters();renderTasks();const active=Array.from($("filters").querySelectorAll("button")).find(function(n){return n.dataset.filter===filterId});if(active)active.focus()});
@@ -641,7 +704,11 @@ const StudyCore = (function () {
   });
   $("task-list").addEventListener("click",function(e){
     const b=e.target.closest("button[data-action]");if(!b)return;const row=b.closest("[data-task-id]"),task=data.tasks.find(function(t){return t.id===row.dataset.taskId});if(!task)return;
-    if(b.dataset.action==="edit"){editId=task.id;$("edit-input").value=task.text;fillSelect("edit-subject",task.subjectId);error("edit-error","",$("edit-input"));showDialog("edit-dialog")}
+    if(b.dataset.action==="focus"){
+      if(timer.status==="running"||timer.status==="paused"||timer.mode!=="focus"||task.completed||!validateMinutes())return;
+      settle(true);activeTaskId=task.id;data.settings.subjectId=task.subjectId;timer.configure(data.settings.minutes,task.subjectId);clearTimerEvents();changed();renderSubjects();timer.start(Date.now());renderTasks();renderTimer();$("clock").scrollIntoView({block:"center",behavior:"smooth"});announce("開始專注："+task.text);return;
+    }
+    if(b.dataset.action==="edit"){$("edit-priority").value=task.priority||"normal";$("edit-due").value=task.dueDate||"";editId=task.id;$("edit-input").value=task.text;fillSelect("edit-subject",task.subjectId);error("edit-error","",$("edit-input"));showDialog("edit-dialog")}
     if(b.dataset.action==="delete"){deleteId=task.id;$("delete-copy").textContent="「"+task.text+"」";showDialog("delete-dialog")}
   });
   $("edit-form").addEventListener("submit",function(e){
@@ -649,10 +716,10 @@ const StudyCore = (function () {
     if(!task){closeDialog("edit-dialog");return}
     if(!value){error("edit-error","請輸入任務內容。",input);input.focus();return}
     if(!data.subjects.some(function(s){return s.id===sub})){error("edit-error","請選擇有效科目。");return}
-    task.text=value;task.subjectId=sub;changed();closeDialog("edit-dialog");renderTasks();announce("任務已更新。");$("task-input").focus();
+    task.text=value;task.subjectId=sub;task.priority=$("edit-priority").value;task.dueDate=$("edit-due").value;changed();closeDialog("edit-dialog");renderTasks();renderTimer();announce("任務已更新。");$("task-input").focus();
   });
   $("delete-confirm").addEventListener("click",function(){
-    data.tasks=data.tasks.filter(function(t){return t.id!==deleteId});changed();closeDialog("delete-dialog");renderTasks();announce("任務已刪除，專注紀錄與成就保留。");$("task-input").focus();
+    data.tasks=data.tasks.filter(function(t){return t.id!==deleteId});changed();closeDialog("delete-dialog");renderTasks();renderTimer();announce("任務已刪除，專注紀錄與成就保留。");$("task-input").focus();
   });
   $("subject-open").addEventListener("click",function(){$("subject-input").value="";error("subject-error","",$("subject-input"));showDialog("subject-dialog")});
   $("subject-form").addEventListener("submit",function(e){
@@ -677,6 +744,34 @@ const StudyCore = (function () {
   window.addEventListener("pageshow",function(e){
     if(e.persisted){timer.mode="focus";timer.reset();queue=[];currentEvent=null;clearTimeout(eventTimeout);$("achievement-toast").hidden=true;renderTimer()}
   });
+  function renderReview(){
+    const now=Date.now(),today=C.totalMs(data,C.dateKey(now)),goal=data.settings.dailyGoal,pct=Math.min(100,Math.floor(today/(goal*60000)*100));
+    setText($("goal-value"),(Math.floor(today/6000)/10).toFixed(1)+" / "+goal+" 分鐘");$("goal-progress").setAttribute("aria-valuenow",String(pct));$("goal-progress").firstElementChild.style.width=pct+"%";
+    setText($("goal-note"),pct>=100?"今天的目標達成了，謝謝你留時間給自己。":"還差 "+Math.ceil((goal*60000-today)/60000)+" 分鐘，慢慢累積就好。");
+    const week=C.weekStats(data,now),sum=week.reduce(function(n,d){return n+d.ms},0),max=Math.max(60000,...week.map(function(d){return d.ms})),chart=$("week-chart");
+    setText($("week-summary"),"最近七天專注 "+(Math.floor(sum/6000)/10).toFixed(1)+" 分鐘 · "+week.filter(function(d){return d.ms>0}).length+" 天有讀書紀錄");
+    const key=week.map(function(d){return d.date+":"+Math.floor(d.ms/1000)}).join("|");if(chart.dataset.key===key)return;chart.dataset.key=key;chart.replaceChildren();
+    week.forEach(function(d,i){const row=el("div","week-column"+(i===6?" today":"")),minutes=(Math.floor(d.ms/6000)/10).toFixed(1),track=el("div","week-track"),bar=el("span","week-bar");row.setAttribute("role","img");row.setAttribute("aria-label",d.date+"："+formatTime(d.ms));bar.style.height=(d.ms/max*100)+"%";track.append(bar);row.append(el("span","week-value",minutes),track,el("span","week-label",i===6?"今天":Number(d.date.slice(5,7))+"/"+Number(d.date.slice(8))));chart.append(row)});
+  }
+  $("goal-form").addEventListener("submit",function(e){e.preventDefault();const input=$("daily-goal");if(!C.goalValid(input.value)){error("goal-error","請輸入 5～480 的整數分鐘。",input);return}error("goal-error","",input);data.settings.dailyGoal=Number(input.value);changed();renderReview();announce("已設定每日目標。");});
+  ["task-search","task-status","task-sort"].forEach(function(id){$(id).addEventListener(id==="task-search"?"input":"change",renderTasks)});
+  document.querySelectorAll("[data-minutes]").forEach(function(b){b.addEventListener("click",function(){$("minutes-input").value=b.dataset.minutes;validateMinutes()})});
+  function download(name,content){const blob=new Blob([content],{type:"application/json;charset=utf-8"}),url=URL.createObjectURL(blob),a=el("a");a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url)},1000)}
+  $("export-backup").addEventListener("click",function(){settle(true);download("study-shiba-backup-"+C.dateKey(Date.now())+".json",JSON.stringify({app:"study-shiba",backupVersion:1,exportedAt:new Date().toISOString(),data:data},null,2));setText($("backup-status"),"已產生備份檔，請保留在自己的裝置。");});
+  function clearPending(){pendingImport=null;$("confirm-import").disabled=true;$("import-summary").hidden=true;error("import-error","")}
+  $("import-open").addEventListener("click",function(){if(timer.status==="running"||timer.status==="paused"||timer.mode!=="focus")return;clearPending();$("backup-file").value="";$("backup-text").value="";showDialog("import-dialog")});
+  $("backup-text").addEventListener("input",clearPending);
+  $("backup-file").addEventListener("change",async function(){clearPending();const file=this.files[0];if(!file)return;if(file.size>2097152){error("import-error","備份大小需在 2 MB 以內。");return}try{$("backup-text").value=await file.text();}catch(e){error("import-error","無法讀取這份檔案，請重新選取。");}});
+  $("check-backup").addEventListener("click",function(){clearPending();try{pendingImport=C.parseBackup($("backup-text").value);$("import-summary").textContent="備份檢查通過："+pendingImport.tasks.length+" 項任務、"+pendingImport.subjects.length+" 個科目、專注 "+formatTime(C.totalMs(pendingImport))+"。確認後會取代目前紀錄，不會合併。";$("import-summary").hidden=false;$("confirm-import").disabled=false;}catch(e){error("import-error",e.message)}});
+  $("confirm-import").addEventListener("click",function(){
+    if(!pendingImport||timer.status==="running"||timer.status==="paused"||timer.mode!=="focus")return;
+    const next=C.normalize(pendingImport).data;C.unlockEligible(next,Date.now());
+    try{localStorage.setItem(STORAGE_KEY,JSON.stringify(next))}catch(e){error("import-error","目前瀏覽器無法保存資料，未取代目前紀錄。");return}
+    data=next;pendingImport=null;dirty=false;saveFailed=false;readWarning="";filterId="all";activeTaskId=null;queue=[];currentEvent=null;clearTimeout(eventTimeout);$("achievement-toast").hidden=true;
+    timer.configure(data.settings.minutes,data.settings.subjectId);$("minutes-input").value=String(data.settings.minutes);$("daily-goal").value=String(data.settings.dailyGoal);$("task-search").value="";$("task-status").value="all";$("task-sort").value="plan";error("timer-error","",$("minutes-input"));error("goal-error","",$("daily-goal"));
+    closeDialog("import-dialog");renderSubjects();renderTasks();renderTimer();renderMetrics(true);renderStorage();setText($("backup-status"),"備份已匯入，計時器等待你手動開始。");announce("備份已匯入。");
+  });
+  $("daily-goal").value=String(data.settings.dailyGoal);
   $("minutes-input").value=String(data.settings.minutes);renderSubjects();renderTasks();renderTimer();renderMetrics(true);renderDate();renderStorage();if(dirty)save();
   setInterval(function(){settle(false)},250);
 })();
